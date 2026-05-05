@@ -1,24 +1,116 @@
 <% layout('layouts/boilerplate') %> <%= success %>
 <body>
-    <h3>Listings</h3>
-    <form action="/listings/new" method="GET">
-        <button>Create New Listing</button>
-    </form>
+    <!-- Explore Header with Search -->
+    <div class="explore-header">
+        <div class="header-content">
+            <h1>Explore</h1>
+            <p>Discover unique homes and experiences</p>
+        </div>
+    </div>
 
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-     <% for(let listing of allListings) { %>
-        <a href="/listings/<%= listing._id %>" class="listing-link">
-        <div class="card col listing-card">
-            <img src="<%= listing.image.url%>" class="card-img-top" alt="listing_image" style="height: 20rem">
-            <div class="card-img-overlay"></div>
-            <div class="card-body">
-                <p class="card-text">
-                <b><%= listing.title %></b><br/>
-                &#8377; <%= listing.price.toLocaleString("en-IN")%> /night</p>
+    <!-- Search and Filters Bar -->
+    <div class="search-filters-bar">
+        <div class="search-container">
+            <form class="search-form" id="searchForm">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchBox" placeholder="Search destinations" class="search-input">
+            </form>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="filters-container">
+            <div id="filters" class="filters-scroll">
+                <div class="filter-item" data-category="Trending">
+                    <i class="fa-solid fa-fire"></i>
+                    <p>Trending</p>
+                </div>
+                <div class="filter-item" data-category="Rooms">
+                    <i class="fa-solid fa-bed"></i>
+                    <p>Rooms</p>
+                </div>
+                <div class="filter-item" data-category="Apartments">
+                    <i class="fa-solid fa-building"></i>
+                    <p>Apartments</p>
+                </div>
+                <div class="filter-item" data-category="Mountains">
+                    <i class="fa-solid fa-mountain"></i>
+                    <p>Mountains</p>
+                </div>
+                <div class="filter-item" data-category="Beachfront">
+                    <i class="fa-solid fa-tree"></i>
+                    <p>Beachfront</p>
+                </div>
+                <div class="filter-item" data-category="Amazing Pool">
+                    <i class="fa-solid fa-person-swimming"></i>
+                    <p>Amazing Pool</p>
+                </div>
+                <div class="filter-item" data-category="Kitchen">
+                    <i class="fa-solid fa-utensils"></i>
+                    <p>Kitchen</p>
+                </div>
+                <div class="filter-item" data-category="Design">
+                    <i class="fa-solid fa-tv"></i>
+                    <p>Design</p>
+                </div>
+                <div class="filter-item" data-category="Favorites">
+                    <i class="fa-solid fa-heart"></i>
+                    <p>Favorites</p>
+                </div>
             </div>
         </div>
-     <% } %>
- </div>
 
+        <!-- Tax Toggle -->
+        <div class="tax-toggle-container">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="taxToggle">
+                <label class="form-check-label" for="taxToggle">Display total after taxes</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Listings Grid -->
+    <div class="listings-container">
+        <% if(allListings && allListings.length > 0) { %>
+            <div class="listings-grid">
+                <% for(let listing of allListings) { %>
+                    <a href="/listings/<%= listing._id %>" class="listing-link">
+                        <div class="listing-card-wrapper">
+                            <div class="listing-card-image">
+                                <img src="<%= (listing.images && listing.images.length > 0 ? listing.images[0].url : listing.image?.url) || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60' %>" alt="<%= listing.title %>">
+                                <div class="card-overlay"></div>
+                                <button class="favorite-btn">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="listing-info">
+                                <div class="listing-header">
+                                    <h3 class="listing-title"><%= listing.title %></h3>
+                                    <div class="listing-rating">
+                                        <i class="fa-solid fa-star" style="color: #222"></i>
+                                        <span><%= listing.avgRating?.toFixed(1) || 'New' %></span>
+                                    </div>
+                                </div>
+                                <p class="listing-location">
+                                    <i class="fa-solid fa-map-pin" style="color: #717171; margin-right: 4px;"></i>
+                                    <%= listing.location %>, <%= listing.country %>
+                                </p>
+                                <p class="listing-price" data-base-price="<%= listing.price %>">
+                                    <span class="price-amount">₹<%= listing.price.toLocaleString('en-IN') %></span>
+                                    <span class="price-period">/night</span>
+                                    <span class="price-tax" style="display:none;"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                <% } %>
+            </div>
+        <% } else { %>
+            <div class="no-listings">
+                <p>No listings available right now. <a href="/listings/new">Create one!</a></p>
+            </div>
+        <% } %>
+    </div>
 </body>
 
+<script src="/js/index-functions.js"></script>
+</script>

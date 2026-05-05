@@ -1,11 +1,9 @@
 <% layout('layouts/boilerplate') %>
     <div class="row mt-1">
         <div class="col-8 offset-2">
-                <br/><br/>
+                <br/>
             <h3>Edit Listing</h3>
             <form method="post" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
-              + +98
-              0 +.
                <div class="mb-3">
                     <label for="title" class="form-label">Title:</label>
                     <input type="text" id="title" name="listing[title]" value="<%= listing.title %>" class="form-control" required>
@@ -38,19 +36,41 @@
                     </div>
 
                     <div class="mb-3 col-md-8">
+                        <label for="category" class="form-label">Category:</label>
+                        <select name="listing[category]" id="category" class="form-control" required>
+                            <option value="">Select a category</option>
+                            <% categories.forEach(cat => { %>
+                                <option value="<%= cat %>" <%= listing.category === cat ? 'selected' : '' %>><%= cat %></option>
+                            <% }) %>
+                        </select>
+                        <div class="invalid-feedback">Please select a category.</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">
                         <label for="country" class="form-label">Country:</label>
                         <input type="text" id="country" name="listing[country]" value="<%= listing.country %>" class="form-control" required>
                         <div class="invalid-feedback">Please provide a valid country.</div>
                     </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label for="location" class="form-label">Location:</label>
+                        <input type="text" id="location" name="listing[location]" value="<%= listing.location %>" class="form-control" required>
+                        <div class="invalid-feedback">Please provide a valid location.</div>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="location" class="form-label">Location:</label>
-                    <input type="text" id="location" name="listing[location]" value="<%= listing.location %>" class="form-control" required>
-                    <div class="invalid-feedback">Please provide a valid location.</div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="coordinates" class="form-label">Coordinates:</label>
+                        <input type="text" id="coordinates" name="listing[coordinates]" value="<%= coordinates || (listing.coordinates ? listing.coordinates.join(',') : '') %>" class="form-control" required>
+                        <div class="form-text">Format: latitude,longitude (e.g., 28.7041,77.1025)</div>
+                        <div class="invalid-feedback">Please provide valid coordinates.</div>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-dark edit-btn mt-3">Update Listing</button><br/><br/>
+                <button type="submit" class="btn btn-dark edit-btn mt-3">Update Listing</button>
             </form>
         </div>
     </div>

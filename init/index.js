@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const initData = require('./data.js');                                                                                        
+const initData = require('./data-unique-images.js');
 const Listing = require('../models/listing.js');
 
 const MONGO_URL =  "mongodb://127.0.0.1:27017/wanderlust";
@@ -16,7 +16,14 @@ async function main() {
 
 const initDB = async () => {
     await Listing.deleteMany({});
-    initData.data=initData.data.map((obj) => ({...obj, owner: '69d0e54dc08d1bfd335adf4c'}));
+initData.data=initData.data.map((obj) => ({
+        ...obj, 
+        owner: '69d0e54dc08d1bfd335adf4c',
+        geometry: {
+            type: 'point',
+            coordinates: [0, 0]
+        }
+    }));
     await Listing.insertMany(initData.data);
     console.log('Database initialized with sample data');
 };

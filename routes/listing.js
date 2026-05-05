@@ -7,7 +7,10 @@ const {isLoggedIn, isOwner, validateListing} = require("../middleware.js");
 const listingController = require("../controllers/listings.js");
 const multer = require('multer');
 const {storage} = require("../cloudeConfig.js");
-const upload = multer({storage});
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
+});
 
 
 router.get("/", wrapAsync(listingController.index));

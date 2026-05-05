@@ -7,6 +7,10 @@ module.exports.listingSchema = Joi.object({ // Yahan 'joi' ko 'Joi' kiya
         description: Joi.string().required(),
         location: Joi.string().required(),
         country: Joi.string().required(),
+        category: Joi.string().required().valid(
+            'Trending', 'Rooms', 'Apartments', 'Mountains', 
+            'Beachfront', 'Amazing Pool', 'Kitchen', 'Design', 'Favorites'
+        ),
         price: Joi.number().required().min(0),
         image: Joi.object({
             url: Joi.string().allow('', null),

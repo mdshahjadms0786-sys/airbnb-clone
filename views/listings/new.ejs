@@ -24,7 +24,7 @@
 
                 <div class="mb-3">
                     <label for="image" class="form-label">Upload Listing Image </label>
-                    <input type="file" id="image" name="listing[image]" class="form-control">required
+                    <input type="file" id="image" name="listing[image]" class="form-control">
                 </div>
 
                 <div class="row">
@@ -37,18 +37,31 @@
                     
 
                     <div class="mb-3 col-md-8">
-                        <label for="country" class="form-label">Country:</label>
-                        <input type="text" placeholder="India" name="listing[country]" class="form-control" required>
-                        <div class="invalid-feedback">Please provide a valid country.</div>
+                        <label for="category" class="form-label">Category:</label>
+                        <select name="listing[category]" id="category" class="form-control" required>
+                            <option value="">Select a category</option>
+                            <% categories.forEach(cat => { %>
+                                <option value="<%= cat %>"><%= cat %></option>
+                            <% }) %>
+                        </select>
+                        <div class="invalid-feedback">Please select a category.</div>
                     </div>
                 </div>
                     
                
 
-                <div class="mb-3">
-                    <label for="location" class="form-label">Location:</label>
-                    <input type="text" placeholder="Delhi" id="location" name="listing[location]" class="form-control" required>
-                    <div class="invalid-feedback">Please provide a valid location.</div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="country" class="form-label">Country:</label>
+                        <input type="text" placeholder="India" name="listing[country]" class="form-control" required>
+                        <div class="invalid-feedback">Please provide a valid country.</div>
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label for="location" class="form-label">Location:</label>
+                        <input type="text" placeholder="Delhi" id="location" name="listing[location]" class="form-control" required>
+                        <div class="invalid-feedback">Please provide a valid location.</div>
+                    </div>
                 </div>
                 
 

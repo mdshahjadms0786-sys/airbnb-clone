@@ -4,7 +4,7 @@
         <h3><%= listing.title%></h3>
     </div>
         <div class="card col-4 offset-2 show-card listing-card">
-                <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing_image">
+<img src="<%= (listing.images && listing.images.length > 0 ? listing.images[0].url : listing.image?.url) || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60' %>" class="card-img-top show-img" alt="listing_image">
                 <div class="card-body">
                     <p class="card-text">Owned by <i><%= listing.owner.username%></i></p>
                         
@@ -67,21 +67,38 @@
             <% } %>
            
 
-            <p><b>All Reviews</b></p>
+            <% if(listing.reviews.length>0) { %>
             <div class="row">
+                <p><b>All Reviews</b></p>
                 <% for (review of listing.reviews){ %>
                 <div class="card col-5 ms-3 mb-3 mt-5">
                     <div class="card-body">
                         <h5 class="card-title">@<%= review.author.username %></h5>
                          <p class="starability-result card-text" data-rating="<%= review.rating %>"> </p>
                         <p class="card-text"><%= review.comment %></p>
+                        <% if(currUser && review.author._id.equals(currUser._id)) { %>
                         <form class="mb-3" method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                            <button class="btn  btn-dark">Delete</button>
+                            <button class="btn btn-dark">Delete</button>
                         </form>
+                        <% } %>
                     </div>
                 </div>
              <% } %>
             </div>
+            <% } %>
         </div>
+        <div class="col-8 offset-3 mb-3">
+                <h3>Where You'll be</h3>
+                <div id="map" 
+                     data-location="<%= listing.location %>" 
+                     data-country="<%= listing.country %>" 
+                     data-title="<%= listing.title %>"
+                     data-image="<%= (listing.images && listing.images.length > 0) ? listing.images[0].url : (listing.image ? listing.image.url : '') %>"
+                     data-price="<%= listing.price %>"
+                     data-coordinates="<%= listing.coordinates ? listing.coordinates.join(',') : '' %>">
+                </div>
+            </div>
         
 </div>
+
+<script src="/js/map.js"></script>
