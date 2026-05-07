@@ -1,5 +1,5 @@
 const User = require("../models/user");
-
+const Listing = require("../models/listing");
 
 module.exports.renderSignupForm = (req, res) =>{
     res.render("users/signup.ejs")
@@ -33,9 +33,9 @@ module.exports.login = async (req, res) => {
     req.flash("success", "Welcome back to Wanderlust!");
     let redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
-  };
+};
 
-  module.exports.logout =  (req, res, next) => {
+module.exports.logout =  (req, res, next) => {
     req.logout((err) =>{
         if(err) {
             return next(err);
@@ -43,4 +43,37 @@ module.exports.login = async (req, res) => {
         req.flash("success", "you are logged out!");
         res.redirect("/listings");
     })
+};
+
+module.exports.renderProfile = async (req, res) => {
+    const userId = req.params.id || req.user._id;
+    const user = await User.findById(userId).populate({
+        path: 'wishlist',
+        populate: { path: 'owner' }
+    });
+    
+    if (!user) {
+        req.flash("error", "User not found!");
+        return res.redirect("/listings");
+    }
+    
+    const myListings = await Listing.find({ owner: userId })
+        .populate('reviews')
+        .sort({ createdAt: -1 });
+    
+    res.render("users/profile.ejs", { profileUser: user, myListings });
+};
+
+module.exports.updateProfile = async (req, res) => {
+    const userId = req.user._id;
+    const { username, email, bio } = req.body;
+    
+    await User.findByIdAndUpdate(userId, {
+        username,
+        email,
+        bio
+    });
+    
+    req.flash("success", "Profile updated successfully!");
+    res.redirect(`/users/${userId}`);
 };

@@ -11,11 +11,13 @@
         <a class="nav-link" href="/listings">Explore </a>
       </div>
       <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Airbnb your home</a>
         <% if(!currUser) { %>
         <a class="nav-link" href="/signup"><b>Sign Up</b></a>
         <a class="nav-link" href="/login"><b>Log in</b></a>
-        <%} %> <% if(currUser) { %>
+        <%} %> 
+        <% if(currUser) { %>
+        <a class="nav-link" href="/bookings/my-bookings"><i class="fa-solid fa-calendar-check"></i> My Bookings</a>
+        <a class="nav-link" href="/users/<%= currUser._id %>"><i class="fa-solid fa-user"></i> <%= currUser.username %></a>
         <a class="nav-link" href="/logout"><b>Log out</b></a>
         <%} %>
       </div>

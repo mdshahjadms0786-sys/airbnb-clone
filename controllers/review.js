@@ -23,7 +23,6 @@ const updateListingRating = async (listingId) => {
 
 module.exports.createReview = async (req, res) => {
     const listing = await Listing.findById(req.params.id);
-
     if (!listing) {
         req.flash("error", "Listing does not exist");
         return res.redirect("/listings");
@@ -38,7 +37,7 @@ module.exports.createReview = async (req, res) => {
 
     await updateListingRating(listing._id);
 
-    req.flash("success", "New Review Created");
+    req.flash("success", "New Review Created!");
     res.redirect(`/listings/${listing._id}`);
 };
 

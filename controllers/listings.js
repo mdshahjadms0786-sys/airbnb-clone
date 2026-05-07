@@ -1,20 +1,7 @@
-const Listing = require("../models/listing");
+const { Listing, CATEGORIES, AMENITIES } = require("../models/listing");
 const mongoose = require("mongoose");
 const ExpressError = require("../utils/ExpressError");
 
-const CATEGORIES = [
-    'Trending',
-    'Rooms',
-    'Apartments',
-    'Mountains',
-    'Beachfront',
-    'Amazing Pool',
-    'Kitchen',
-    'Design',
-    'Favorites'
-];
-
-// Updated for images array - backward compatible
 const DEFAULT_IMAGE_URL = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60";
 const DEFAULT_IMAGE_FILENAME = "default-image";
 
@@ -27,7 +14,6 @@ const getPreviewImageUrl = (imageUrl) => {
     if (!imageUrl?.includes("/upload")) {
         return imageUrl;
     }
-
     return imageUrl.replace("/upload", "/upload/w_320,h_220,c_fill,q_auto,f_auto");
 };
 
@@ -39,21 +25,59 @@ const ensureValidListingId = (id, req) => {
     return true;
 };
 
-
 module.exports.index = async (req, res) => {
-    const { category } = req.query;
+    const { category, page = 1, limit = 12, sort = 'newest' } = req.query;
     let filter = {};
     
     if (category && CATEGORIES.includes(category)) {
-        filter = { category };
+        if (category === 'Favorites' && req.user) {
+            const User = require("../models/user");
+            const user = await User.findById(req.user._id);
+            filter = { _id: { $in: user.wishlist || [] } };
+        } else {
+            filter = { category };
+        }
     }
     
-    const allListings = await Listing.find(filter);
-    res.render('listings/index.ejs', { allListings, selectedCategory: category || null });
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+    
+    let sortOption = {};
+    if (sort === 'price_low') sortOption = { price: 1 };
+    else if (sort === 'price_high') sortOption = { price: -1 };
+    else if (sort === 'rating') sortOption = { avgRating: -1 };
+    else if (sort === 'newest') sortOption = { createdAt: -1 };
+    else sortOption = { createdAt: -1 };
+    
+    const totalListings = await Listing.countDocuments(filter);
+    const allListings = await Listing.find(filter)
+        .sort(sortOption)
+        .skip(skip)
+        .limit(limitNum);
+    
+    const totalPages = Math.ceil(totalListings / limitNum);
+    
+    let wishlistIds = [];
+    if (req.user) {
+        const User = require("../models/user");
+        const user = await User.findById(req.user._id);
+        wishlistIds = user.wishlist ? user.wishlist.map(id => id.toString()) : [];
+    }
+    
+    res.render('listings/index.ejs', { 
+        allListings: allListings || [], 
+        selectedCategory: category || null,
+        currentPage: pageNum,
+        totalPages: totalPages || 1,
+        totalListings: totalListings || 0,
+        selectedSort: sort || 'newest',
+        wishlistIds: wishlistIds || []
+    });
 };
 
 module.exports.renderNewForm = (req, res) => {
-    res.render('listings/new.ejs', { categories: CATEGORIES });
+    res.render('listings/new.ejs', { categories: CATEGORIES, amenities: AMENITIES });
 };
 
 module.exports.showListing = async (req, res) => {
@@ -61,13 +85,14 @@ module.exports.showListing = async (req, res) => {
     if (!ensureValidListingId(id, req)) {
         return res.redirect("/listings");
     }
-    const listing = await Listing.findById(id).populate({path: "reviews", populate: {path: "author"}}).populate("owner");
+    const listing = await Listing.findById(id)
+        .populate({path: "reviews", populate: {path: "author"}})
+        .populate("owner");
     if(!listing){
         req.flash("error", "Listing you requested for does not exist!");
         return res.redirect("/listings");
     }
-    console.log(listing);
-    res.render('listings/show.ejs', { listing });
+    res.render('listings/show.ejs', { listing, amenities: AMENITIES });
 };
 
 module.exports.createListing = async (req, res, next) => {
@@ -76,19 +101,29 @@ module.exports.createListing = async (req, res, next) => {
             throw new ExpressError(400, 'Invalid Listing Data!');
         }
 
-        let imageUrl = DEFAULT_IMAGE_URL;
-        if (req.file) {
-            imageUrl = req.file.path;
-        } else if (req.body.listing.image?.url) {
-            imageUrl = req.body.listing.image.url;
-        } else if (req.body.listing.images?.[0]?.url) {
-            imageUrl = req.body.listing.images[0].url;
+        let images = [];
+        
+        if (req.files && req.files.length > 0) {
+            console.log('Files received:', req.files.length);
+            images = req.files.map(file => ({
+                url: file.path || file.secure_url,
+                filename: file.filename || file.public_id
+            }));
         }
+        
+        if (images.length === 0) {
+            images = [{
+                url: DEFAULT_IMAGE_URL,
+                filename: DEFAULT_IMAGE_FILENAME
+            }];
+        }
+        
+        const mainImage = images[0];
 
         const location = req.body.listing.location;
         const country = req.body.listing.country;
         let coordinates = [0, 0];
-        let geometry = { type: 'point' };
+        let geometry = { type: 'Point', coordinates: [0, 0] };
 
         try {
             const searchQuery = `${location}, ${country}`;
@@ -99,32 +134,49 @@ module.exports.createListing = async (req, res, next) => {
             if (data && data.length > 0) {
                 coordinates = [parseFloat(data[0].lon), parseFloat(data[0].lat)];
                 geometry = {
-                    type: 'point',
+                    type: 'Point',
                     coordinates: coordinates
                 };
             }
         } catch (geoErr) {
-            console.warn('Geocoding failed, using default coordinates:', geoErr.message);
+            console.warn('Geocoding failed, using default coordinates');
         }
 
         const newListing = new Listing({
-            ...req.body.listing,
+            title: req.body.listing.title,
+            description: req.body.listing.description,
+            price: req.body.listing.price,
+            location: req.body.listing.location,
+            country: req.body.listing.country,
+            category: req.body.listing.category,
             image: {
-                url: imageUrl,
-                filename: req.file ? req.file.filename : DEFAULT_IMAGE_FILENAME
+                url: mainImage.url,
+                filename: mainImage.filename
             },
-            images: [{
-                url: imageUrl,
-                filename: req.file ? req.file.filename : DEFAULT_IMAGE_FILENAME
-            }],
+            images: images,
             geometry: geometry,
             coordinates: coordinates,
+            amenities: req.body.listing.amenities || [],
+            guests: parseInt(req.body.listing.guests) || 4,
+            bedrooms: parseInt(req.body.listing.bedrooms) || 1,
+            beds: parseInt(req.body.listing.beds) || 1,
+            bathrooms: parseInt(req.body.listing.bathrooms) || 1,
+            houseRules: {
+                checkIn: req.body.listing['houseRules.checkIn'] || '3:00 PM',
+                checkOut: req.body.listing['houseRules.checkOut'] || '11:00 AM',
+                petsAllowed: req.body.listing['houseRules.petsAllowed'] === 'true' || false,
+                smokingAllowed: req.body.listing['houseRules.smokingAllowed'] === 'true' || false,
+                eventsAllowed: req.body.listing['houseRules.eventsAllowed'] === 'true' || false,
+                additionalRules: req.body.listing['houseRules.additionalRules'] || ''
+            }
         });
         newListing.owner = req.user._id;
+        newListing.hostName = req.user.username;
         await newListing.save();
         req.flash("success", "New Listing Created!");
         res.redirect('/listings');
     } catch (err) {
+        console.error('Create listing error:', err);
         next(err);
     }
 };
@@ -145,7 +197,6 @@ module.exports.renderEditForm = async (req, res) => {
 };
 
 module.exports.updateListing = async (req, res) => {
-
     let { id } = req.params;
     if (!ensureValidListingId(id, req)) {
         return res.redirect("/listings");
@@ -153,33 +204,56 @@ module.exports.updateListing = async (req, res) => {
     if(!req.body?.listing) {
         throw new ExpressError(400, 'Invalid Listing Data!');
     }
-    const { images: imageInput, ...listingData } = req.body.listing;
-    const updateData = { ...listingData, geometry: { type: 'point' } };
+    
+    const listing = await Listing.findById(id);
+    if (!listing) {
+        req.flash("error", "Listing not found!");
+        return res.redirect("/listings");
+    }
+    
+    let images = listing.images || [];
+    
+    if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(file => ({
+            url: file.path,
+            filename: file.filename
+        }));
+        images = newImages;
+    } else if (req.body.listing.keepImages === 'true' || req.body.listing.keepImages === true) {
+    } else if (req.body.listing.images && Array.isArray(req.body.listing.images)) {
+        images = req.body.listing.images.filter(img => img && img.url).map(img => ({
+            url: img.url,
+            filename: img.filename || 'existing-image'
+        }));
+    }
+    
+    if (images.length === 0) {
+        images = [{
+            url: DEFAULT_IMAGE_URL,
+            filename: DEFAULT_IMAGE_FILENAME
+        }];
+    }
+    
+    const mainImage = images[0];
+    
+    const updateData = {
+        ...req.body.listing,
+        image: {
+            url: mainImage.url,
+            filename: mainImage.filename
+        },
+        images: images,
+        geometry: { type: 'Point' }
+    };
 
     if (req.body.listing.coordinates) {
-        updateData.coordinates = req.body.listing.coordinates.split(',').map(Number);
-    }
-
-    if (req.file) {
-        const newImage = {
-            url: req.file.path,
-            filename: req.file.filename,
-        };
-        updateData.image = newImage;
-        updateData.images = [newImage];
-    } else if (req.body.listing.image?.url) {
-        updateData.image = {
-            url: getImageUrl(req.body.listing.image.url),
-            filename: req.body.listing.image.filename || DEFAULT_IMAGE_FILENAME
-        };
-        updateData.images = [{
-            url: getImageUrl(req.body.listing.image.url),
-            filename: req.body.listing.image.filename || DEFAULT_IMAGE_FILENAME
-        }];
+        const coords = req.body.listing.coordinates.split(',').map(Number);
+        updateData.coordinates = coords;
+        updateData.geometry.coordinates = coords;
     }
 
     await Listing.findByIdAndUpdate(id, updateData, { runValidators: true });
-    req.flash("success", "Listing Updated!")
+    req.flash("success", "Listing Updated!");
     res.redirect(`/listings/${id}`);
 };
 
@@ -188,8 +262,7 @@ module.exports.destroyListing = async (req, res) => {
     if (!ensureValidListingId(id, req)) {
         return res.redirect("/listings");
     }
-    let deletedListing = await Listing.findByIdAndDelete(id);
-    console.log(deletedListing);
-    req.flash("success", "Listing Deleted!")
+    await Listing.findByIdAndDelete(id);
+    req.flash("success", "Listing Deleted!");
     res.redirect('/listings');
 };

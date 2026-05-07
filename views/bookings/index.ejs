@@ -1,0 +1,377 @@
+<% layout('/layouts/boilerplate') %>
+
+<div class="bookings-container">
+    <div class="bookings-header">
+        <h1><i class="fa-solid fa-calendar-check"></i> My Bookings</h1>
+    </div>
+
+    <% if(upcomingBookings && upcomingBookings.length > 0) { %>
+    <section class="bookings-section">
+        <h2><i class="fa-solid fa-clock"></i> Upcoming Trips</h2>
+        <div class="bookings-grid">
+            <% for(let booking of upcomingBookings) { %>
+            <div class="booking-card-main">
+                <div class="booking-image">
+                    <img src="<%= booking.listing && booking.listing.images && booking.listing.images.length > 0 ? booking.listing.images[0].url : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400' %>" alt="<%= booking.listing ? booking.listing.title : 'Listing' %>">
+                </div>
+                <div class="booking-details">
+                    <div class="booking-status <%= booking.status %>">
+                        <%= booking.status === 'confirmed' ? '✓ Confirmed' : booking.status %>
+                    </div>
+                    <h3><%= booking.listing ? booking.listing.title : 'Listing Not Found' %></h3>
+                    <p class="booking-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <%= booking.listing ? booking.listing.location : '' %>, <%= booking.listing ? booking.listing.country : '' %>
+                    </p>
+                    
+                    <div class="booking-dates">
+                        <div class="date-box">
+                            <span class="date-label">Check-in</span>
+                            <span class="date-value"><%= new Date(booking.checkIn).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                        </div>
+                        <div class="date-arrow">→</div>
+                        <div class="date-box">
+                            <span class="date-label">Check-out</span>
+                            <span class="date-value"><%= new Date(booking.checkOut).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-info">
+                        <span><i class="fa-solid fa-users"></i> <%= booking.guests %> guest(s)</span>
+                        <span><i class="fa-solid fa-moon"></i> <%= booking.totalNights %> night(s)</span>
+                    </div>
+                    
+                    <div class="booking-total">
+                        <span>Total Paid:</span>
+                        <strong>₹<%= booking.totalPrice.toLocaleString('en-IN') %></strong>
+                    </div>
+                    
+                    <div class="booking-actions">
+                        <a href="/bookings/my-bookings/<%= booking._id %>" class="btn-details">View Details</a>
+                        <% if(booking.status !== 'cancelled') { %>
+                        <form action="/bookings/my-bookings/<%= booking._id %>/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?')">
+                            <button type="submit" class="btn-cancel">Cancel</button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </section>
+    <% } %>
+
+    <% if(pastBookings && pastBookings.length > 0) { %>
+    <section class="bookings-section past-section">
+        <h2><i class="fa-solid fa-history"></i> Past Trips</h2>
+        <div class="bookings-grid">
+            <% for(let booking of pastBookings) { %>
+            <div class="booking-card-main past">
+                <div class="booking-image">
+                    <img src="<%= booking.listing && booking.listing.images && booking.listing.images.length > 0 ? booking.listing.images[0].url : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400' %>" alt="<%= booking.listing ? booking.listing.title : 'Listing' %>">
+                    <div class="past-badge">Completed</div>
+                </div>
+                <div class="booking-details">
+                    <h3><%= booking.listing ? booking.listing.title : 'Listing Not Found' %></h3>
+                    <p class="booking-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <%= booking.listing ? booking.listing.location : '' %>, <%= booking.listing ? booking.listing.country : '' %>
+                    </p>
+                    
+                    <div class="booking-dates">
+                        <div class="date-box">
+                            <span class="date-label">Check-in</span>
+                            <span class="date-value"><%= new Date(booking.checkIn).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                        </div>
+                        <div class="date-arrow">→</div>
+                        <div class="date-box">
+                            <span class="date-label">Check-out</span>
+                            <span class="date-value"><%= new Date(booking.checkOut).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-actions">
+                        <a href="/bookings/my-bookings/<%= booking._id %>" class="btn-details">View Details</a>
+                        <a href="/listings/<%= booking.listing ? booking.listing._id : '' %>" class="btn-book-again">Book Again</a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </section>
+    <% } %>
+
+    <% if((!upcomingBookings || upcomingBookings.length === 0) && (!pastBookings || pastBookings.length === 0)) { %>
+    <div class="no-bookings">
+        <i class="fa-solid fa-calendar-xmark" style="font-size: 4rem; color: #ccc;"></i>
+        <h2>No Bookings Yet</h2>
+        <p>You haven't made any bookings. Start exploring!</p>
+        <a href="/listings" class="btn-explore">Explore Stays</a>
+    </div>
+    <% } %>
+</div>
+
+<style>
+.bookings-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.bookings-header {
+    margin-bottom: 2rem;
+}
+
+.bookings-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bookings-section {
+    margin-bottom: 3rem;
+}
+
+.bookings-section h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bookings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.booking-card-main {
+    display: flex;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+}
+
+.booking-card-main.past {
+    opacity: 0.8;
+}
+
+.booking-image {
+    width: 280px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.booking-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.past-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.booking-details {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: fit-content;
+    margin-bottom: 8px;
+}
+
+.booking-status.confirmed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.booking-status.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.booking-status.completed {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+.booking-details h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.booking-location {
+    color: #717171;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.booking-dates {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+
+.date-box {
+    text-align: center;
+}
+
+.date-label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #717171;
+    margin-bottom: 4px;
+}
+
+.date-value {
+    font-weight: 600;
+    color: #222;
+}
+
+.date-arrow {
+    color: #717171;
+    font-size: 1.2rem;
+}
+
+.booking-info {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    color: #717171;
+    font-size: 0.9rem;
+}
+
+.booking-info i {
+    margin-right: 4px;
+}
+
+.booking-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px solid #eee;
+    margin-bottom: 1rem;
+}
+
+.booking-total span {
+    color: #717171;
+}
+
+.booking-total strong {
+    font-size: 1.25rem;
+    color: #222;
+}
+
+.booking-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+}
+
+.btn-details {
+    padding: 10px 20px;
+    background: #222;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    text-align: center;
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    background: white;
+    color: #717171;
+    border: 1px solid #717171;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-book-again {
+    padding: 10px 20px;
+    background: #f3424d;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.no-bookings {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.no-bookings h2 {
+    margin: 1rem 0 0.5rem;
+    color: #222;
+}
+
+.no-bookings p {
+    color: #717171;
+    margin-bottom: 1.5rem;
+}
+
+.btn-explore {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #f3424d;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.past-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+@media (max-width: 768px) {
+    .booking-card-main {
+        flex-direction: column;
+    }
+    
+    .booking-image {
+        width: 100%;
+        height: 200px;
+    }
+    
+    .booking-dates {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .date-arrow {
+        transform: rotate(90deg);
+    }
+}
+</style>

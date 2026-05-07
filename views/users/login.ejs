@@ -1,21 +1,143 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="row mt-4">
-    <div class="col-6 offset-3">
-        <h1 class="col-8 offset-2">Login on Wanderlust</h1>
-        <diV class="col-8 offset-2">
-            <form action="/login" method="POST" class="needs-validation" novalidate>
-                <div class="mb-3">
-                        <label for="username" class="form-label">Username:</label><br/>
-                        <input type="text" name="username" id="username" class="form-control" required>
-                </div>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <h1>Welcome Back</h1>
+            <p>Login to continue exploring</p>
+        </div>
+        
+        <form action="/login" method="POST" class="needs-validation auth-form" novalidate>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" id="username" class="form-control" required>
+            </div>
 
-                <div class="mb-3">
-                        <label for="password" class="form-label">Password:</label><br/>
-                        <input type="password" name="password" id="password" class="form-control" required>
-                </div>
-                <button class="btn btn-success">Login</button>
-            </form>
-        </diV>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+            
+            <button class="btn btn-submit">Login</button>
+            
+            <div class="auth-footer">
+                <a href="/forgot-password">Forgot Password?</a>
+            </div>
+        </form>
+        
+        <div class="auth-switch">
+            <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+        </div>
     </div>
 </div>
+
+<style>
+.auth-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header i {
+    font-size: 3rem;
+    color: #f3424d;
+    margin-bottom: 1rem;
+}
+
+.auth-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+    color: #717171;
+    font-size: 0.95rem;
+}
+
+.auth-form .form-label {
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 0.5rem;
+}
+
+.auth-form .form-control {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.auth-form .form-control:focus {
+    border-color: #f3424d;
+    box-shadow: 0 0 0 3px rgba(243, 66, 77, 0.1);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 0.875rem;
+    background: #f3424d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-submit:hover {
+    background: #e03e49;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.auth-footer a {
+    color: #717171;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    color: #f3424d;
+    text-decoration: underline;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.auth-switch p {
+    color: #717171;
+    margin: 0;
+}
+
+.auth-switch a {
+    color: #f3424d;
+    font-weight: 600;
+}
+</style>

@@ -1,0 +1,306 @@
+<% layout('/layouts/boilerplate') %>
+
+<div class="booking-detail-container">
+    <a href="/bookings/my-bookings" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> Back to My Bookings
+    </a>
+
+    <div class="booking-detail-card">
+        <div class="detail-header">
+            <div class="detail-status <%= booking.status %>">
+                <% if(booking.status === 'confirmed') { %>
+                    <i class="fa-solid fa-check-circle"></i> Booking Confirmed
+                <% } else if(booking.status === 'cancelled') { %>
+                    <i class="fa-solid fa-times-circle"></i> Booking Cancelled
+                <% } else { %>
+                    <i class="fa-solid fa-check-circle"></i> <%= booking.status %>
+                <% } %>
+            </div>
+            <h1><%= booking.listing ? booking.listing.title : 'Listing Not Found' %></h1>
+            <p class="detail-location">
+                <i class="fa-solid fa-location-dot"></i>
+                <%= booking.listing ? booking.listing.location : '' %>, <%= booking.listing ? booking.listing.country : '' %>
+            </p>
+        </div>
+
+        <div class="detail-content">
+            <div class="detail-image">
+                <img src="<%= booking.listing && booking.listing.images && booking.listing.images.length > 0 ? booking.listing.images[0].url : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600' %>" alt="<%= booking.listing ? booking.listing.title : 'Listing' %>">
+            </div>
+
+            <div class="detail-info">
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-calendar"></i> Trip Details</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Check-in</span>
+                            <span class="info-value"><%= new Date(booking.checkIn).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Check-out</span>
+                            <span class="info-value"><%= new Date(booking.checkOut).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Guests</span>
+                            <span class="info-value"><%= booking.guests %> guest(s)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Nights</span>
+                            <span class="info-value"><%= booking.totalNights %> night(s)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-user"></i> Guest Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Name</span>
+                            <span class="info-value"><%= booking.guestName %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value"><%= booking.guestEmail %></span>
+                        </div>
+                        <% if(booking.guestPhone) { %>
+                        <div class="info-item">
+                            <span class="info-label">Phone</span>
+                            <span class="info-value"><%= booking.guestPhone %></span>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="info-section price-section">
+                    <h3><i class="fa-solid fa-receipt"></i> Price Breakdown</h3>
+                    <div class="price-details">
+                        <div class="price-row">
+                            <span>₹<%= booking.pricePerNight.toLocaleString('en-IN') %> × <%= booking.totalNights %> nights</span>
+                            <span>₹<%= (booking.pricePerNight * booking.totalNights).toLocaleString('en-IN') %></span>
+                        </div>
+                        <div class="price-row">
+                            <span>Cleaning fee</span>
+                            <span>₹<%= booking.cleaningFee.toLocaleString('en-IN') %></span>
+                        </div>
+                        <div class="price-row">
+                            <span>Service fee</span>
+                            <span>₹<%= booking.serviceFee.toLocaleString('en-IN') %></span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Total</span>
+                            <span>₹<%= booking.totalPrice.toLocaleString('en-IN') %></span>
+                        </div>
+                    </div>
+                </div>
+
+                <% if(booking.status === 'confirmed') { %>
+                <div class="detail-actions">
+                    <a href="/listings/<%= booking.listing ? booking.listing._id : '' %>" class="btn-view-listing">
+                        View Listing
+                    </a>
+                    <form action="/bookings/my-bookings/<%= booking._id %>/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?')">
+                        <button type="submit" class="btn-cancel-booking">Cancel Booking</button>
+                    </form>
+                </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="detail-footer">
+            <p>Booking ID: <%= booking._id %></p>
+            <p>Booked on: <%= new Date(booking.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+        </div>
+    </div>
+</div>
+
+<style>
+.booking-detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #222;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    color: #f3424d;
+}
+
+.booking-detail-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.detail-header {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8f8f8, #fff);
+    border-bottom: 1px solid #eee;
+}
+
+.detail-status {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.detail-status.confirmed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.detail-status.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.detail-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.detail-location {
+    color: #717171;
+}
+
+.detail-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.detail-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.info-section {
+    margin-bottom: 2rem;
+}
+
+.info-section h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.info-item {
+    padding: 1rem;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #717171;
+    margin-bottom: 4px;
+}
+
+.info-value {
+    font-weight: 600;
+    color: #222;
+}
+
+.price-section {
+    background: #f8f8f8;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.price-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    color: #717171;
+}
+
+.price-row.total {
+    border-top: 1px solid #ddd;
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #222;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-view-listing {
+    flex: 1;
+    padding: 12px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.btn-cancel-booking {
+    flex: 1;
+    padding: 12px;
+    background: white;
+    color: #717171;
+    border: 1px solid #717171;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.detail-footer {
+    padding: 1.5rem 2rem;
+    background: #f8f8f8;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #717171;
+}
+
+@media (max-width: 768px) {
+    .detail-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>

@@ -1,73 +1,259 @@
 
 <% layout('layouts/boilerplate') %>
+<style>
+.image-upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #fafafa;
+}
+.image-upload-area:hover,
+.image-upload-area.dragover {
+    border-color: #f3424d;
+    background: #fff5f5;
+}
+.image-preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+.preview-thumb {
+    position: relative;
+    width: 90px;
+    height: 90px;
+}
+.preview-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #eee;
+}
+.preview-thumb .remove-img {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+    cursor: pointer;
+    line-height: 22px;
+}
+.amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+.amenity-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+.amenity-checkbox:hover {
+    background: #f0f0f0;
+}
+.amenity-checkbox input {
+    cursor: pointer;
+}
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+</style>
+
     <div class="row mt-3">
         <div class="col-8 offset-2">
             <br/><br/>
             <h3>Create New Listing</h3>
-            <form method="post" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+            <form method="POST" action="/listings" enctype="multipart/form-data" id="listingForm">
                 <div class="mb-3">
-                    <label for="title" class="form-label">Title:</label><br/>
+                    <label for="title" class="form-label">Title:</label>
                     <input type="text" placeholder="Add a catchy title" name="listing[title]" class="form-control" required>
-                    <div class="valid-feedback">Title looks good!</div>
                 </div>
 
                 <div class="mb-3">
                     <label for="description" class="form-label">Description:</label>
-                    <textarea placeholder="description" id="description" name="listing[description]" class="form-control" required></textarea>
-                    <div class="invalid-feedback">Please provide a valid description.</div>
+                    <textarea placeholder="description" id="description" name="listing[description]" class="form-control" rows="4" required></textarea>
                 </div>
 
-                <!-- <div class="mb-3">
-                    <label for="image" class="form-label">Image URL:</label>
-                    <input placeholder="image URL/Link" type="text" id="image" name="listing[image][url]" class="form-control">
-                </div> -->
-
                 <div class="mb-3">
-                    <label for="image" class="form-label">Upload Listing Image </label>
-                    <input type="file" id="image" name="listing[image]" class="form-control">
+                    <label class="form-label">Images (max 5):</label>
+                    <div class="image-upload-area" id="uploadArea" onclick="document.getElementById('imageInput').click()">
+                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: #999;"></i>
+                        <p style="margin: 10px 0 5px; color: #666;">Click to select images</p>
+                        <small style="color: #999;">or drag and drop here</small>
+                    </div>
+                    <input type="file" name="listing[images]" id="imageInput" multiple accept="image/*" style="display: none;" onchange="handleFileSelect(this)">
+                    <div class="image-preview-grid" id="previewGrid"></div>
                 </div>
 
                 <div class="row">
-
                     <div class="mb-3 col-md-4">
-                        <label for="price" class="form-label">Price:</label>
-                        <input placeholder="1200" type="number" id="price" name="listing[price]" class="form-control" required>
-                        <div class="invalid-feedback">Please provide a valid price.</div>
+                        <label for="price" class="form-label">Price (₹):</label>
+                        <input type="number" placeholder="1200" name="listing[price]" class="form-control" required>
                     </div>
-                    
-
                     <div class="mb-3 col-md-8">
                         <label for="category" class="form-label">Category:</label>
-                        <select name="listing[category]" id="category" class="form-control" required>
-                            <option value="">Select a category</option>
+                        <select name="listing[category]" class="form-control" required>
+                            <option value="">Select category</option>
                             <% categories.forEach(cat => { %>
                                 <option value="<%= cat %>"><%= cat %></option>
                             <% }) %>
                         </select>
-                        <div class="invalid-feedback">Please select a category.</div>
                     </div>
                 </div>
-                    
-               
 
                 <div class="row">
                     <div class="mb-3 col-md-6">
                         <label for="country" class="form-label">Country:</label>
                         <input type="text" placeholder="India" name="listing[country]" class="form-control" required>
-                        <div class="invalid-feedback">Please provide a valid country.</div>
                     </div>
-
                     <div class="mb-3 col-md-6">
                         <label for="location" class="form-label">Location:</label>
-                        <input type="text" placeholder="Delhi" id="location" name="listing[location]" class="form-control" required>
-                        <div class="invalid-feedback">Please provide a valid location.</div>
+                        <input type="text" placeholder="Mumbai" name="listing[location]" class="form-control" required>
                     </div>
                 </div>
-                
 
-                <br/>
-                <button class="btn btn-dark add-btn mb-3 col-1">Add</button>
-                <br/><br/>
+                <div class="section-title"><i class="fa-solid fa-users"></i> Property Details</div>
+                <div class="row">
+                    <div class="mb-3 col-md-3">
+                        <label for="guests" class="form-label">Guests:</label>
+                        <input type="number" placeholder="4" name="listing[guests]" value="4" class="form-control" min="1" required>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="bedrooms" class="form-label">Bedrooms:</label>
+                        <input type="number" placeholder="1" name="listing[bedrooms]" value="1" class="form-control" min="1">
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="beds" class="form-label">Beds:</label>
+                        <input type="number" placeholder="1" name="listing[beds]" value="1" class="form-control" min="1">
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="bathrooms" class="form-label">Bathrooms:</label>
+                        <input type="number" placeholder="1" name="listing[bathrooms]" value="1" class="form-control" min="1">
+                    </div>
+                </div>
+
+                <div class="section-title"><i class="fa-solid fa-house-chimney"></i> Amenities</div>
+                <div class="amenities-grid">
+                    <% amenities.forEach(amenity => { %>
+                    <label class="amenity-checkbox">
+                        <input type="checkbox" name="listing[amenities]" value="<%= amenity %>">
+                        <%= amenity %>
+                    </label>
+                    <% }) %>
+                </div>
+
+                <div class="section-title"><i class="fa-solid fa-clipboard-list"></i> House Rules</div>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Check-in:</label>
+                        <input type="text" name="listing[houseRules.checkIn]" value="3:00 PM" class="form-control">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Checkout:</label>
+                        <input type="text" name="listing[houseRules.checkOut]" value="11:00 AM" class="form-control">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Additional Rules:</label>
+                        <input type="text" name="listing[houseRules.additionalRules]" placeholder="e.g., No loud music after 10 PM" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" name="listing[houseRules.petsAllowed]" value="true" class="form-check-input" id="petsAllowed">
+                            <label class="form-check-label" for="petsAllowed">Pets allowed</label>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" name="listing[houseRules.smokingAllowed]" value="true" class="form-check-input" id="smokingAllowed">
+                            <label class="form-check-label" for="smokingAllowed">Smoking allowed</label>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" name="listing[houseRules.eventsAllowed]" value="true" class="form-check-input" id="eventsAllowed">
+                            <label class="form-check-label" for="eventsAllowed">Events allowed</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-dark add-btn mt-4">Create Listing</button>
             </form>
          </div>
     </div>
+
+<script>
+const uploadArea = document.getElementById('uploadArea');
+const imageInput = document.getElementById('imageInput');
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    imageInput.files = e.dataTransfer.files;
+    showPreviews();
+});
+
+function handleFileSelect(input) {
+    showPreviews();
+}
+
+function showPreviews() {
+    const grid = document.getElementById('previewGrid');
+    grid.innerHTML = '';
+    const files = imageInput.files;
+    
+    for (let i = 0; i < files.length && i < 5; i++) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'preview-thumb';
+            div.innerHTML = `<img src="${e.target.result}"><button type="button" class="remove-img" onclick="removeImg(${i})">&times;</button>`;
+            grid.appendChild(div);
+        };
+        reader.readAsDataURL(files[i]);
+    }
+}
+
+function removeImg(index) {
+    const dt = new DataTransfer();
+    const files = imageInput.files;
+    for (let i = 0; i < files.length; i++) {
+        if (i !== index) dt.items.add(files[i]);
+    }
+    imageInput.files = dt.files;
+    showPreviews();
+}
+</script>

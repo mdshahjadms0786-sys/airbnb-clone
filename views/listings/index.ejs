@@ -1,6 +1,5 @@
 <% layout('layouts/boilerplate') %> <%= success %>
 <body>
-    <!-- Explore Header with Search -->
     <div class="explore-header">
         <div class="header-content">
             <h1>Explore</h1>
@@ -8,7 +7,6 @@
         </div>
     </div>
 
-    <!-- Search and Filters Bar -->
     <div class="search-filters-bar">
         <div class="search-container">
             <form class="search-form" id="searchForm">
@@ -17,9 +15,12 @@
             </form>
         </div>
 
-        <!-- Category Filters -->
         <div class="filters-container">
             <div id="filters" class="filters-scroll">
+                <div class="filter-item" data-category="">
+                    <i class="fa-solid fa-globe"></i>
+                    <p>All</p>
+                </div>
                 <div class="filter-item" data-category="Trending">
                     <i class="fa-solid fa-fire"></i>
                     <p>Trending</p>
@@ -37,7 +38,7 @@
                     <p>Mountains</p>
                 </div>
                 <div class="filter-item" data-category="Beachfront">
-                    <i class="fa-solid fa-tree"></i>
+                    <i class="fa-solid fa-water"></i>
                     <p>Beachfront</p>
                 </div>
                 <div class="filter-item" data-category="Amazing Pool">
@@ -49,7 +50,7 @@
                     <p>Kitchen</p>
                 </div>
                 <div class="filter-item" data-category="Design">
-                    <i class="fa-solid fa-tv"></i>
+                    <i class="fa-solid fa-palette"></i>
                     <p>Design</p>
                 </div>
                 <div class="filter-item" data-category="Favorites">
@@ -59,7 +60,20 @@
             </div>
         </div>
 
-        <!-- Tax Toggle -->
+        <% const currentSort = typeof selectedSort !== 'undefined' ? selectedSort : 'newest'; 
+           const currentCat = typeof selectedCategory !== 'undefined' ? selectedCategory : null;
+           const currentPageNum = typeof currentPage !== 'undefined' ? currentPage : 1;
+           const totalPagesNum = typeof totalPages !== 'undefined' ? totalPages : 1;
+        %>
+        <div class="sort-filter-container">
+            <select id="sortSelect" class="sort-select">
+                <option value="newest" <%= currentSort === 'newest' ? 'selected' : '' %>>Newest First</option>
+                <option value="price_low" <%= currentSort === 'price_low' ? 'selected' : '' %>>Price: Low to High</option>
+                <option value="price_high" <%= currentSort === 'price_high' ? 'selected' : '' %>>Price: High to Low</option>
+                <option value="rating" <%= currentSort === 'rating' ? 'selected' : '' %>>Highest Rated</option>
+            </select>
+        </div>
+
         <div class="tax-toggle-container">
             <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="taxToggle">
@@ -68,18 +82,30 @@
         </div>
     </div>
 
-    <!-- Listings Grid -->
+    <% const listings = typeof allListings !== 'undefined' ? allListings : []; 
+           const wishlist = typeof wishlistIds !== 'undefined' ? wishlistIds : [];
+           const totalList = typeof totalListings !== 'undefined' ? totalListings : 0;
+        %>
+
     <div class="listings-container">
-        <% if(allListings && allListings.length > 0) { %>
+        <% if(listings && listings.length > 0) { %>
+            <div class="results-info">
+                <span><%= totalList %> places to stay</span>
+            </div>
             <div class="listings-grid">
-                <% for(let listing of allListings) { %>
+                <% for(let listing of listings) { %>
                     <a href="/listings/<%= listing._id %>" class="listing-link">
                         <div class="listing-card-wrapper">
                             <div class="listing-card-image">
-                                <img src="<%= (listing.images && listing.images.length > 0 ? listing.images[0].url : listing.image?.url) || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60' %>" alt="<%= listing.title %>">
+                                <img src="<%= listing.images && listing.images.length > 0 ? listing.images[0].url : (listing.image?.url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800') %>" alt="<%= listing.title %>" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800'">
+                                <% if(listing.images && listing.images.length > 1) { %>
+                                    <div class="image-count-badge">
+                                        <i class="fa-solid fa-images"></i> <%= listing.images.length %>
+                                    </div>
+                                <% } %>
                                 <div class="card-overlay"></div>
-                                <button class="favorite-btn">
-                                    <i class="fa-regular fa-heart"></i>
+                                <button class="favorite-btn <%= wishlist && wishlist.includes(listing._id.toString()) ? 'liked' : '' %>" data-listing-id="<%= listing._id %>">
+                                    <i class="<%= wishlist && wishlist.includes(listing._id.toString()) ? 'fa-solid' : 'fa-regular' %> fa-heart" style="<%= wishlist && wishlist.includes(listing._id.toString()) ? 'color: #f3424d' : '' %>"></i>
                                 </button>
                             </div>
                             <div class="listing-info">
@@ -87,7 +113,10 @@
                                     <h3 class="listing-title"><%= listing.title %></h3>
                                     <div class="listing-rating">
                                         <i class="fa-solid fa-star" style="color: #222"></i>
-                                        <span><%= listing.avgRating?.toFixed(1) || 'New' %></span>
+                                        <span><%= listing.avgRating > 0 ? listing.avgRating.toFixed(1) : 'New' %></span>
+                                        <% if(listing.numReviews > 0) { %>
+                                            <span class="review-count">(<%= listing.numReviews %>)</span>
+                                        <% } %>
                                     </div>
                                 </div>
                                 <p class="listing-location">
@@ -104,13 +133,47 @@
                     </a>
                 <% } %>
             </div>
+
+            <% if(totalPages > 1) { %>
+            <div class="pagination-container">
+                <nav aria-label="Listings pagination">
+                    <ul class="pagination">
+                        <% if(currentPageNum > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPageNum - 1 %>&category=<%= currentCat || '' %>&sort=<%= currentSort %>">Previous</a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                        <% } %>
+                        
+                        <% for(let i = 1; i <= totalPagesNum; i++) { %>
+                            <% if(i === 1 || i === totalPagesNum || (i >= currentPageNum - 1 && i <= currentPageNum + 1)) { %>
+                                <li class="page-item <%= i === currentPageNum ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>&category=<%= currentCat || '' %>&sort=<%= currentSort %>"><%= i %></a>
+                                </li>
+                            <% } else if(i === currentPageNum - 2 || i === currentPageNum + 2) { %>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <% } %>
+                        <% } %>
+                        
+                        <% if(currentPageNum < totalPagesNum) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPageNum + 1 %>&category=<%= currentCat || '' %>&sort=<%= currentSort %>">Next</a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item disabled"><span class="page-link">Next</span></li>
+                        <% } %>
+                    </ul>
+                </nav>
+            </div>
+            <% } %>
         <% } else { %>
             <div class="no-listings">
-                <p>No listings available right now. <a href="/listings/new">Create one!</a></p>
+                <i class="fa-solid fa-home" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <p>No listings found. <a href="/listings/new">Create one!</a></p>
             </div>
         <% } %>
     </div>
 </body>
 
 <script src="/js/index-functions.js"></script>
-</script>

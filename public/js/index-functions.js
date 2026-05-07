@@ -9,17 +9,26 @@ document.addEventListener('DOMContentLoaded', function() {
     filterItems.forEach(filter => {
         const filterCategory = filter.getAttribute('data-category');
         
-        // Highlight selected category
-        if (selectedCategory === filterCategory) {
+        if (selectedCategory === filterCategory || (selectedCategory === '' && filterCategory === '')) {
             filter.classList.add('active');
         }
         
-        // Add click handler
         filter.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
-            window.location.href = `/listings?category=${encodeURIComponent(category)}`;
+            const sortSelect = document.getElementById('sortSelect');
+            const currentSort = sortSelect ? sortSelect.value : 'newest';
+            window.location.href = `/listings?category=${encodeURIComponent(category)}&sort=${currentSort}`;
         });
     });
+
+    // ===== SORT FUNCTIONALITY =====
+    const sortSelect = document.getElementById('sortSelect');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            const category = urlParams.get('category') || '';
+            window.location.href = `/listings?category=${category}&sort=${this.value}`;
+        });
+    }
 
     // ===== SEARCH FUNCTIONALITY =====
     const searchInput = document.getElementById('searchBox');
@@ -30,16 +39,13 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const searchQuery = searchInput.value.trim();
             if (searchQuery) {
-                // Filter listings by title, location, or country
                 filterListingsBySearch(searchQuery);
             }
         });
         
-        // Real-time search as user types
         searchInput.addEventListener('input', function() {
             const searchQuery = this.value.trim().toLowerCase();
             if (searchQuery === '') {
-                // Show all listings
                 document.querySelectorAll('.listing-link').forEach(link => {
                     link.style.display = '';
                 });
@@ -63,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (matches) visibleCount++;
         });
         
-        // Show no results message if needed
         const container = document.querySelector('.listings-container');
         const existingMessage = container.querySelector('.no-search-results');
         if (existingMessage) existingMessage.remove();
@@ -78,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== TAX TOGGLE FUNCTIONALITY =====
     const taxToggle = document.getElementById('taxToggle');
-    const TAX_RATE = 0.18; // 18% GST
+    const TAX_RATE = 0.18;
     
     if (taxToggle) {
         taxToggle.addEventListener('change', function() {
@@ -91,14 +96,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const taxSpan = element.querySelector('.price-tax');
                 
                 if (this.checked) {
-                    // Show price with tax
                     const taxAmount = Math.round(basePrice * TAX_RATE);
                     const totalPrice = basePrice + taxAmount;
                     priceAmount.textContent = '₹' + totalPrice.toLocaleString('en-IN');
                     taxSpan.style.display = 'inline';
                     taxSpan.textContent = ` (+₹${taxAmount.toLocaleString('en-IN')} tax)`;
                 } else {
-                    // Show base price only
                     priceAmount.textContent = '₹' + basePrice.toLocaleString('en-IN');
                     taxSpan.style.display = 'none';
                     taxSpan.textContent = '';
@@ -107,52 +110,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== FAVORITE BUTTON FUNCTIONALITY =====
+    // ===== FAVORITE BUTTON FUNCTIONALITY (Database-based) =====
     const favoriteButtons = document.querySelectorAll('.favorite-btn');
     
     favoriteButtons.forEach(btn => {
-        // Load saved favorites from localStorage
-        const listingId = btn.closest('.listing-link').href.split('/').pop();
-        const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+        const listingId = btn.getAttribute('data-listing-id');
         
-        if (savedFavorites[listingId]) {
-            btn.classList.add('liked');
-            const icon = btn.querySelector('i');
-            icon.classList.remove('fa-regular');
-            icon.classList.add('fa-solid');
-            icon.style.color = '#f3424d';
-        }
-        
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', async function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            const listingId = this.closest('.listing-link').href.split('/').pop();
-            const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '{}');
-            const icon = this.querySelector('i');
-            
-            this.classList.toggle('liked');
-            
-            if (this.classList.contains('liked')) {
-                savedFavorites[listingId] = true;
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid');
-                icon.style.color = '#f3424d';
-            } else {
-                delete savedFavorites[listingId];
-                icon.classList.add('fa-regular');
-                icon.classList.remove('fa-solid');
-                icon.style.color = '#222222';
+            try {
+                const response = await fetch(`/wishlist/${listingId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const icon = btn.querySelector('i');
+                    
+                    if (data.isWishlisted) {
+                        btn.classList.add('liked');
+                        icon.classList.remove('fa-regular');
+                        icon.classList.add('fa-solid');
+                        icon.style.color = '#f3424d';
+                    } else {
+                        btn.classList.remove('liked');
+                        icon.classList.remove('fa-solid');
+                        icon.classList.add('fa-regular');
+                        icon.style.color = '#222222';
+                    }
+                }
+            } catch (error) {
+                console.error('Error toggling wishlist:', error);
+                window.location.href = '/login';
             }
-            
-            localStorage.setItem('favorites', JSON.stringify(savedFavorites));
         });
     });
 
     // ===== RESPONSIVE FILTERS =====
     const filterScroll = document.querySelector('.filters-scroll');
     if (filterScroll) {
-        // Auto-scroll to active filter
         const activeFilter = filterScroll.querySelector('.filter-item.active');
         if (activeFilter) {
             activeFilter.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });

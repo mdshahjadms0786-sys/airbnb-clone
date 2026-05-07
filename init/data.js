@@ -1,1209 +1,1330 @@
+const hostNames = [
+    "Arjun Sharma", "Priya Patel", "Rahul Verma", "Sneha Gupta",
+    "Michael Johnson", "Emma Williams", "James Brown", "Sophia Davis",
+    "Luca Ferrari", "Isabella Rossi", "Pierre Dupont", "Marie Laurent",
+    "Carlos Garcia", "Ana Martinez", "Hiroshi Tanaka", "Yuki Nakamura",
+    "Ahmed Hassan", "Fatima Ali", "David Müller", "Anna Schmidt",
+    "Oliver Smith", "Charlotte Jones", "Noah Wilson", "Ava Taylor",
+    "Ethan Anderson", "Mia Thomas", "Liam Jackson", "Amelia White",
+    "Benjamin Harris", "Ella Martin", "Lucas Thompson", "Grace Lee",
+    "Mason Clark", "Chloe Lewis", "Aiden Robinson", "Lily Walker"
+];
+
 const data = [
   // ===== TRENDING (12 listings) =====
   {
     title: "Oceanfront Penthouse Miami",
     description: "Stunning oceanfront penthouse with panoramic views of the Atlantic. Modern luxury meets beach living in this spacious 3-bedroom retreat. Features floor-to-ceiling windows, private balcony, and direct beach access.",
-    image: { filename: "trending-miami-penthouse-1", url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=60" },
+    image: { filename: "trending-miami-penthouse-1", url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" },
     price: 4500,
     location: "Miami Beach",
     country: "United States",
     category: "Trending",
     avgRating: 4.8,
-    numReviews: 89
+    numReviews: 89,
+    hostName: hostNames[0],
+    geometry: { type: "Point", coordinates: [-80.1300, 25.7907] }
   },
   {
     title: "Downtown Loft NYC",
     description: "Chic downtown loft in the heart of Manhattan. Exposed brick walls, industrial design, and stunning city views. Walking distance to top restaurants, museums, and Central Park.",
-    image: { filename: "trending-nyc-loft-1", url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=60" },
+    image: { filename: "trending-nyc-loft-1", url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800" },
     price: 3200,
     location: "New York City",
     country: "United States",
     category: "Trending",
     avgRating: 4.7,
-    numReviews: 156
+    numReviews: 156,
+    geometry: { type: "Point", coordinates: [-74.0060, 40.7128] }
   },
   {
     title: "Treehouse Big Sur",
     description: "Magical treehouse nestled among giant redwoods. A unique retreat offering complete immersion in nature while maintaining luxury comfort. Features private deck and star-gazing opportunities.",
-    image: { filename: "trending-bigsur-treehouse-1", url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=60" },
+    image: { filename: "trending-bigsur-treehouse-1", url: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800" },
     price: 2800,
     location: "Big Sur",
     country: "United States",
     category: "Trending",
     avgRating: 4.9,
-    numReviews: 67
+    numReviews: 67,
+    geometry: { type: "Point", coordinates: [-121.7800, 36.2704] }
   },
   {
     title: "Glamping Morocco",
     description: "Experience luxury camping in the Sahara Desert. Traditional Berber tent with modern amenities, private campfire dinners, and unforgettable sunrise over the dunes.",
-    image: { filename: "trending-morocco-glamping-1", url: "https://images.unsplash.com/photo-1530538309175-4f2a99c49ecb?w=800&q=60" },
+    image: { filename: "trending-morocco-glamping-1", url: "https://images.unsplash.com/photo-1549294413-26f195200c16?w=800" },
     price: 1800,
     location: "Merzouga",
     country: "Morocco",
     category: "Trending",
     avgRating: 4.9,
-    numReviews: 45
+    numReviews: 45,
+    geometry: { type: "Point", coordinates: [-7.9811, 31.6295] }
   },
   {
     title: "Luxury Yacht Dubai",
     description: "Ultra-luxurious yacht experience in Dubai Marina. Full crew, gourmet catering, and exclusive access to Dubai's most iconic views. The ultimate in nautical luxury.",
-    image: { filename: "trending-dubai-yacht-1", url: "https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=800&q=60" },
+    image: { filename: "trending-dubai-yacht-1", url: "https://images.unsplash.com/photo-1601918774516-5b34cdc8f17e?w=800" },
     price: 8500,
     location: "Dubai Marina",
     country: "United Arab Emirates",
     category: "Trending",
     avgRating: 4.8,
-    numReviews: 32
+    numReviews: 32,
+    geometry: { type: "Point", coordinates: [55.2708, 25.2048] }
   },
   {
     title: "Sky Villa Singapore",
     description: "Award-winning Sky Villa with breathtaking city skyline views. Infinity pool, private gym, and 24-hour concierge service. The pinnacle of urban luxury living.",
-    image: { filename: "trending-singapore-villa-1", url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=60" },
+    image: { filename: "trending-singapore-villa-1", url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800" },
     price: 6200,
     location: "Marina Bay",
     country: "Singapore",
     category: "Trending",
     avgRating: 4.7,
-    numReviews: 78
+    numReviews: 78,
+    geometry: { type: "Point", coordinates: [103.8198, 1.3521] }
   },
   {
     title: "Ice Hotel Sweden",
     description: "Sleep in the world's most famous ice hotel. Hand-carved ice rooms, thermal sleeping bags, and surreal Arctic landscape. A once-in-a-lifetime winter experience.",
-    image: { filename: "trending-sweden-ice-1", url: "https://images.unsplash.com/photo-1478827536114-da961b7f86d2?w=800&q=60" },
+    image: { filename: "trending-sweden-ice-1", url: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800" },
     price: 2400,
     location: "Jukkasjärvi",
     country: "Sweden",
     category: "Trending",
     avgRating: 4.6,
-    numReviews: 58
+    numReviews: 58,
+    geometry: { type: "Point", coordinates: [20.5937, 67.8558] }
   },
   {
     title: "Cave House Spain",
     description: "Unique cave dwelling in Granada's historic Albaicín. Carved into the hillside with stunning Alhambra views. Authentic Andalusian architecture with modern comfort.",
-    image: { filename: "trending-spain-cave-1", url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=60" },
+    image: { filename: "trending-spain-cave-1", url: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800" },
     price: 1650,
     location: "Granada",
     country: "Spain",
     category: "Trending",
     avgRating: 4.8,
-    numReviews: 93
+    numReviews: 93,
+    geometry: { type: "Point", coordinates: [-3.5986, 37.1773] }
   },
   {
     title: "Floating House Amsterdam",
     description: "Iconic houseboat on Amsterdam's most beautiful canal. Fully renovated with modern amenities while maintaining original character. Experience true Dutch living.",
-    image: { filename: "trending-amsterdam-boat-1", url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=60" },
+    image: { filename: "trending-amsterdam-boat-1", url: "https://images.unsplash.com/photo-1455587734955-081b22074882?w=800" },
     price: 2100,
     location: "Amsterdam",
     country: "Netherlands",
     category: "Trending",
     avgRating: 4.7,
-    numReviews: 124
+    numReviews: 124,
+    geometry: { type: "Point", coordinates: [4.9041, 52.3676] }
   },
   {
     title: "Bubble Hotel France",
     description: "Transparent bubble accommodation in the French Alps. Sleep under the stars in complete comfort. Includes breakfast delivered by balloon basket. Magical experience.",
-    image: { filename: "trending-france-bubble-1", url: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=800&q=60" },
+    image: { filename: "trending-france-bubble-1", url: "https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?w=800" },
     price: 1900,
     location: "Chamonix",
     country: "France",
     category: "Trending",
     avgRating: 4.9,
-    numReviews: 41
+    numReviews: 41,
+    geometry: { type: "Point", coordinates: [6.8696, 45.9237] }
   },
   {
     title: "Lakefront Sauna Finland",
     description: "Authentic Finnish lakeside sauna experience. Private lakeside location with traditional smoke sauna, hot tub, and Arctic wildlife. Pure relaxation in nature.",
-    image: { filename: "trending-finland-sauna-1", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=60" },
+    image: { filename: "trending-finland-sauna-1", url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800" },
     price: 1500,
     location: "Kuopio",
     country: "Finland",
     category: "Trending",
     avgRating: 4.8,
-    numReviews: 56
+    numReviews: 56,
+    geometry: { type: "Point", coordinates: [27.6782, 62.8924] }
   },
   {
     title: "Helicopter Pad Monaco",
     description: "Exclusive rooftop penthouse with private helicopter landing pad. Ultimate Monaco luxury with harbor views, infinity pool, and 5-star concierge. The ultimate VIP experience.",
-    image: { filename: "trending-monaco-heli-1", url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=60" },
+    image: { filename: "trending-monaco-heli-1", url: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800" },
     price: 12000,
     location: "Monte Carlo",
     country: "Monaco",
     category: "Trending",
     avgRating: 4.9,
-    numReviews: 23
+    numReviews: 23,
+    geometry: { type: "Point", coordinates: [7.4246, 43.7384] }
   },
 
   // ===== ROOMS (12 listings) =====
   {
     title: "Cozy Room Paris Attic",
     description: "Charming attic room in Le Marais with Eiffel Tower views. Original beams, exposed stone, and authentic Parisian character. Perfect for couples seeking romance.",
-    image: { filename: "rooms-paris-attic-1", url: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&q=60" },
+    image: { filename: "rooms-paris-attic-1", url: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800" },
     price: 1200,
     location: "Paris",
     country: "France",
     category: "Rooms",
     avgRating: 4.7,
-    numReviews: 87
+    numReviews: 87,
+    geometry: { type: "Point", coordinates: [2.3522, 48.8566] }
   },
   {
     title: "Modern Loft Room Barcelona",
     description: "Stylish room in a converted textile factory. Industrial chic design with private terrace. Located in trendy El Poblenec with best restaurants steps away.",
-    image: { filename: "rooms-barcelona-loft-1", url: "https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=800&q=60" },
+    image: { filename: "rooms-barcelona-loft-1", url: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800" },
     price: 950,
     location: "Barcelona",
     country: "Spain",
     category: "Rooms",
     avgRating: 4.6,
-    numReviews: 112
+    numReviews: 112,
+    geometry: { type: "Point", coordinates: [2.1734, 41.3851] }
   },
   {
     title: "Traditional Ryokan Kyoto",
     description: "Authentic Japanese ryokan room with tatami floors and futon bedding. Traditional onsen bath, kaiseki dinner, and serene garden views. Timeless Japanese hospitality.",
-    image: { filename: "rooms-kyoto-ryokan-1", url: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=60" },
+    image: { filename: "rooms-kyoto-ryokan-1", url: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800" },
     price: 2100,
     location: "Kyoto",
     country: "Japan",
     category: "Rooms",
     avgRating: 4.9,
-    numReviews: 145
+    numReviews: 145,
+    geometry: { type: "Point", coordinates: [135.7681, 35.0116] }
   },
   {
     title: "Boutique Room Santorini",
     description: "Romantic cave room in Oia with caldera views. White-washed walls, curved arches, and stunning sunset views. The most photographed village in Greece.",
-    image: { filename: "rooms-santorini-boutique-1", url: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=60" },
+    image: { filename: "rooms-santorini-boutique-1", url: "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800" },
     price: 2800,
     location: "Oia",
     country: "Greece",
     category: "Rooms",
     avgRating: 4.8,
-    numReviews: 98
+    numReviews: 98,
+    geometry: { type: "Point", coordinates: [25.3750, 36.4618] }
   },
   {
     title: "Castle Room Scotland",
     description: "Dramatic room in a 16th-century Scottish castle. Four-poster bed, original stone walls, and Highland views. Fairytale accommodation with modern luxury.",
-    image: { filename: "rooms-scotland-castle-1", url: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=60" },
+    image: { filename: "rooms-scotland-castle-1", url: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800" },
     price: 1850,
     location: "Inverness",
     country: "United Kingdom",
     category: "Rooms",
     avgRating: 4.7,
-    numReviews: 76
+    numReviews: 76,
+    geometry: { type: "Point", coordinates: [-4.2247, 57.4791] }
   },
   {
     title: "Beach Hut Bali",
     description: "Simple beach hut with extraordinary ocean views. Steps from the sand, perfect for surfers and beach lovers. Authentic Bali relaxed vibes.",
-    image: { filename: "rooms-bali-hut-1", url: "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=800&q=60" },
+    image: { filename: "rooms-bali-hut-1", url: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800" },
     price: 450,
     location: "Canggu",
     country: "Indonesia",
     category: "Rooms",
     avgRating: 4.5,
-    numReviews: 203
+    numReviews: 203,
+    geometry: { type: "Point", coordinates: [115.1389, -8.6478] }
   },
   {
     title: "Mountain Lodge Room Aspen",
     description: "Ski-in/ski-out room at premier Aspen resort. Fireplace, mountain views, and access to world-class skiing. Ultimate winter luxury in the Rockies.",
-    image: { filename: "rooms-aspen-lodge-1", url: "https://images.unsplash.com/photo-1586375300773-8384e3e4916f?w=800&q=60" },
+    image: { filename: "rooms-aspen-lodge-1", url: "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800" },
     price: 2500,
     location: "Aspen",
     country: "United States",
     category: "Rooms",
     avgRating: 4.8,
-    numReviews: 64
+    numReviews: 64,
+    geometry: { type: "Point", coordinates: [-106.8175, 39.1911] }
   },
   {
     title: "Urban Room Tokyo Capsule",
     description: "Innovative capsule room in Shinjuku. Ultra-compact but perfectly designed with high-tech features. Experience the future of Japanese urban living.",
-    image: { filename: "rooms-tokyo-capsule-1", url: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&q=60" },
+    image: { filename: "rooms-tokyo-capsule-1", url: "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800" },
     price: 350,
     location: "Tokyo",
     country: "Japan",
     category: "Rooms",
     avgRating: 4.4,
-    numReviews: 312
+    numReviews: 312,
+    geometry: { type: "Point", coordinates: [139.6917, 35.6895] }
   },
   {
     title: "Hostel Private Prague",
     description: "Private room in award-winning Prague hostel. Beautiful Art Nouveau building with modern amenities. Perfect balance of budget and comfort.",
-    image: { filename: "rooms-prague-hostel-1", url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=60" },
+    image: { filename: "rooms-prague-hostel-1", url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800" },
     price: 550,
     location: "Prague",
     country: "Czech Republic",
     category: "Rooms",
     avgRating: 4.6,
-    numReviews: 187
+    numReviews: 187,
+    geometry: { type: "Point", coordinates: [14.4208, 50.0880] }
   },
   {
     title: "Farm Stay Room Tuscany",
     description: "Rustic room on working Tuscan farm. Olive groves, vineyards, and homemade breakfast. Authentic Italian countryside experience at its finest.",
-    image: { filename: "rooms-tuscany-farm-1", url: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=60" },
+    image: { filename: "rooms-tuscany-farm-1", url: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=800" },
     price: 1100,
     location: "Chianti",
     country: "Italy",
     category: "Rooms",
     avgRating: 4.8,
-    numReviews: 134
+    numReviews: 134,
+    geometry: { type: "Point", coordinates: [11.2558, 43.7711] }
   },
   {
     title: "Ski Chalet Room Alps",
     description: "Cozy room in classic Alpine chalet. Wood-paneled walls, warm atmosphere, and ski-in access. Perfect for winter sports enthusiasts seeking comfort.",
-    image: { filename: "rooms-alps-chalet-1", url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60" },
+    image: { filename: "rooms-alps-chalet-1", url: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800" },
     price: 1450,
     location: "Zermatt",
     country: "Switzerland",
     category: "Rooms",
     avgRating: 4.7,
-    numReviews: 92
+    numReviews: 92,
+    geometry: { type: "Point", coordinates: [7.7491, 46.0207] }
   },
   {
     title: "Tree Room Costa Rica",
     description: "Elevated tree room in Costa Rican rainforest. Howler monkeys, toucans, and complete nature immersion. Eco-luxury in one of the world's most biodiverse regions.",
-    image: { filename: "rooms-costarica-tree-1", url: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=60" },
+    image: { filename: "rooms-costarica-tree-1", url: "https://images.unsplash.com/photo-1537726235470-8504e3beef77?w=800" },
     price: 980,
     location: "Monteverde",
     country: "Costa Rica",
     category: "Rooms",
     avgRating: 4.9,
-    numReviews: 78
+    numReviews: 78,
+    geometry: { type: "Point", coordinates: [-84.8171, 10.3157] }
   },
 
   // ===== APARTMENTS (12 listings) =====
   {
     title: "Tuscan Villa Apartment",
     description: "Luxurious apartment in historic Tuscan villa. Terracotta floors, vaulted ceilings, and panoramic vineyard views. The essence of Italian elegance.",
-    image: { filename: "apartments-florence-villa-1", url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=60" },
+    image: { filename: "apartments-florence-villa-1", url: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800" },
     price: 2200,
     location: "Florence",
     country: "Italy",
     category: "Apartments",
     avgRating: 4.8,
-    numReviews: 156
+    numReviews: 156,
+    geometry: { type: "Point", coordinates: [11.2558, 43.7696] }
   },
   {
     title: "Amsterdam Canal House",
     description: "Classic Dutch canal house apartment. Original features, modern kitchen, and prime Grachten view. Iconic Amsterdam experience in historic building.",
-    image: { filename: "apartments-amsterdam-canal-1", url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=60" },
+    image: { filename: "apartments-amsterdam-canal-1", url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800" },
     price: 1950,
     location: "Amsterdam",
     country: "Netherlands",
     category: "Apartments",
     avgRating: 4.7,
-    numReviews: 189
+    numReviews: 189,
+    geometry: { type: "Point", coordinates: [4.9041, 52.3676] }
   },
   {
     title: "London Thames View",
     description: "Contemporary apartment with uninterrupted Thames views. Floor-to-ceiling windows, designer interior, and walk to Big Ben. London living at its best.",
-    image: { filename: "apartments-london-thames-1", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=60" },
+    image: { filename: "apartments-london-thames-1", url: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800" },
     price: 3500,
     location: "London",
     country: "United Kingdom",
     category: "Apartments",
     avgRating: 4.6,
-    numReviews: 234
+    numReviews: 234,
+    geometry: { type: "Point", coordinates: [-0.1276, 51.5074] }
   },
   {
     title: "Berlin Industrial Loft",
     description: "Hip converted factory loft in Kreuzberg. Exposed brick, steel beams, and artistic vibe. Trendy neighborhood with legendary nightlife.",
-    image: { filename: "apartments-berlin-loft-1", url: "https://images.unsplash.com/photo-1600210492493-0946913c3316?w=800&q=60" },
+    image: { filename: "apartments-berlin-loft-1", url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800" },
     price: 1400,
     location: "Berlin",
     country: "Germany",
     category: "Apartments",
     avgRating: 4.7,
-    numReviews: 167
+    numReviews: 167,
+    geometry: { type: "Point", coordinates: [13.4050, 52.5200] }
   },
   {
     title: "Tokyo Micro Apartment",
     description: "Cleverly designed micro apartment in Shibuya. Every inch optimized for comfort. Walking distance to everything Tokyo offers. Modern minimalism.",
-    image: { filename: "apartments-tokyo-micro-1", url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=60" },
+    image: { filename: "apartments-tokyo-micro-1", url: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800" },
     price: 1100,
     location: "Tokyo",
     country: "Japan",
     category: "Apartments",
     avgRating: 4.5,
-    numReviews: 278
+    numReviews: 278,
+    geometry: { type: "Point", coordinates: [139.6917, 35.6895] }
   },
   {
     title: "Paris Haussmann Apartment",
     description: "Classic Haussmann apartment in the 7th Arrondissement. Period details, balcony views of Eiffel Tower, and elegance. Parisian sophistication.",
-    image: { filename: "apartments-paris-haussmann-1", url: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=60" },
+    image: { filename: "apartments-paris-haussmann-1", url: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800" },
     price: 2800,
     location: "Paris",
     country: "France",
     category: "Apartments",
     avgRating: 4.9,
-    numReviews: 145
+    numReviews: 145,
+    geometry: { type: "Point", coordinates: [2.3522, 48.8566] }
   },
   {
     title: "Madrid Historic Flat",
     description: "Beautifully restored flat in La Latina. Original tiles, wooden beams, and rooftop terrace. Steps from Plaza Mayor and tapas bars.",
-    image: { filename: "apartments-madrid-flat-1", url: "https://images.unsplash.com/photo-1600573472591-ee6c563aaec3?w=800&q=60" },
+    image: { filename: "apartments-madrid-flat-1", url: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=800" },
     price: 1350,
     location: "Madrid",
     country: "Spain",
     category: "Apartments",
     avgRating: 4.7,
-    numReviews: 123
+    numReviews: 123,
+    geometry: { type: "Point", coordinates: [-3.7033, 40.4167] }
   },
   {
     title: "Lisbon Ocean View",
     description: "Bright apartment in Principe Real with Tagus views. Contemporary design, shared pool, and tram 28 at door. Best of Lisbon living.",
-    image: { filename: "apartments-lisbon-ocean-1", url: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=60" },
+    image: { filename: "apartments-lisbon-ocean-1", url: "https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800" },
     price: 1600,
     location: "Lisbon",
     country: "Portugal",
     category: "Apartments",
     avgRating: 4.8,
-    numReviews: 198
+    numReviews: 198,
+    geometry: { type: "Point", coordinates: [-9.1393, 38.7223] }
   },
   {
     title: "Vienna Art Nouveau",
     description: "Stunning Art Nouveau apartment in inner city. Period details, high ceilings, and museum district location. Habsburg elegance meets modern comfort.",
-    image: { filename: "apartments-vienna-artnouveau-1", url: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=60" },
+    image: { filename: "apartments-vienna-artnouveau-1", url: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800" },
     price: 1850,
     location: "Vienna",
     country: "Austria",
     category: "Apartments",
     avgRating: 4.7,
-    numReviews: 89
+    numReviews: 89,
+    geometry: { type: "Point", coordinates: [16.3738, 48.2082] }
   },
   {
     title: "Budapest Thermal Bath View",
     description: "Elegant apartment overlooking Szechenyi Baths. Danube views, spa access, and ruin bar neighborhood. Budapest's best at your doorstep.",
-    image: { filename: "apartments-budapest-thermal-1", url: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=60" },
+    image: { filename: "apartments-budapest-thermal-1", url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800" },
     price: 1200,
     location: "Budapest",
     country: "Hungary",
     category: "Apartments",
     avgRating: 4.6,
-    numReviews: 176
+    numReviews: 176,
+    geometry: { type: "Point", coordinates: [19.0402, 47.4979] }
   },
   {
     title: "Stockholm Fika Apartment",
     description: "Cozy apartment in Vasastan with Stockholm vibe. Classic Swedish design, breakfast included, and archipelago day trips. Nordic comfort.",
-    image: { filename: "apartments-stockholm-fika-1", url: "https://images.unsplash.com/photo-1600210491369-e753d80a41f3?w=800&q=60" },
+    image: { filename: "apartments-stockholm-fika-1", url: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800" },
     price: 1750,
     location: "Stockholm",
     country: "Sweden",
     category: "Apartments",
     avgRating: 4.8,
-    numReviews: 112
+    numReviews: 112,
+    geometry: { type: "Point", coordinates: [18.0686, 59.3293] }
   },
   {
     title: "Copenhagen Hygge Flat",
     description: "Classic Copenhagen flat in trendy Nørrebro. Danish design, candlelit dinners, and bicycle included. Experience true Danish hygge lifestyle.",
-    image: { filename: "apartments-copenhagen-hygge-1", url: "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800&q=60" },
+    image: { filename: "apartments-copenhagen-hygge-1", url: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=800" },
     price: 1900,
     location: "Copenhagen",
     country: "Denmark",
     category: "Apartments",
     avgRating: 4.9,
-    numReviews: 134
+    numReviews: 134,
+    geometry: { type: "Point", coordinates: [12.5683, 55.6761] }
   },
 
   // ===== MOUNTAINS (12 listings) =====
   {
     title: "Aspen Ski Cabin",
     description: "Premier ski-in/ski-out cabin in Aspen. Mountain views, hot tub, and luxury finishes. World-class skiing at your doorstep.",
-    image: { filename: "mountains-aspen-cabin-1", url: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=800&q=60" },
+    image: { filename: "mountains-aspen-cabin-1", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" },
     price: 4500,
     location: "Aspen",
     country: "United States",
     category: "Mountains",
     avgRating: 4.9,
-    numReviews: 67
+    numReviews: 67,
+    geometry: { type: "Point", coordinates: [-106.8175, 39.1911] }
   },
   {
     title: "Swiss Chalet Verbier",
     description: "Iconic Swiss chalet in Verbier. Traditional architecture, modern luxury, and Alpine adventure. The ultimate mountain escape.",
-    image: { filename: "mountains-verbier-chalet-1", url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=60" },
+    image: { filename: "mountains-verbier-chalet-1", url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800" },
     price: 5200,
     location: "Verbier",
     country: "Switzerland",
     category: "Mountains",
     avgRating: 4.9,
-    numReviews: 45
+    numReviews: 45,
+    geometry: { type: "Point", coordinates: [7.3061, 46.1938] }
   },
   {
     title: "Banff Lake Cabin",
     description: "Picturesque cabin beside Lake Louise. Mountain panoramas, wildlife viewing, and hiking trails. Canadian Rockies at their finest.",
-    image: { filename: "mountains-banff-cabin-1", url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60" },
+    image: { filename: "mountains-banff-cabin-1", url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800" },
     price: 2800,
     location: "Banff",
     country: "Canada",
     category: "Mountains",
     avgRating: 4.8,
-    numReviews: 123
+    numReviews: 123,
+    geometry: { type: "Point", coordinates: [-115.5708, 51.1784] }
   },
   {
     title: "Dolomites Hut Cortina",
     description: "Mountain refuge in the Italian Dolomites. Dramatic peaks, via ferrata access, and authentic Alpine cuisine. Outdoor adventure paradise.",
-    image: { filename: "mountains-dolomites-hut-1", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=60" },
+    image: { filename: "mountains-dolomites-hut-1", url: "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800" },
     price: 1950,
     location: "Cortina d'Ampezzo",
     country: "Italy",
     category: "Mountains",
     avgRating: 4.7,
-    numReviews: 89
+    numReviews: 89,
+    geometry: { type: "Point", coordinates: [12.1357, 46.5405] }
   },
   {
     title: "Queenstown Alpine Lodge",
     description: "Stunning lodge in adventure capital Queenstown. Lake views, jet boat access, and bungee jumping nearby. New Zealand's best outdoor base.",
-    image: { filename: "mountains-queenstown-lodge-1", url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=60" },
+    image: { filename: "mountains-queenstown-lodge-1", url: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=800" },
     price: 2200,
     location: "Queenstown",
     country: "New Zealand",
     category: "Mountains",
     avgRating: 4.8,
-    numReviews: 156
+    numReviews: 156,
+    geometry: { type: "Point", coordinates: [168.6626, -45.0312] }
   },
   {
     title: "Patagonia Refugio",
     description: "Remote refuge at foot of Torres del Paine. Glacier views, trekking access, and wilderness immersion. One of Earth's last frontiers.",
-    image: { filename: "mountains-patagonia-refugio-1", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=60" },
+    image: { filename: "mountains-patagonia-refugio-1", url: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=800" },
     price: 1600,
     location: "Torres del Paine",
     country: "Chile",
     category: "Mountains",
     avgRating: 4.9,
-    numReviews: 34
+    numReviews: 34,
+    geometry: { type: "Point", coordinates: [-72.9666, -51.2538] }
   },
   {
     title: "Himalaya Teahouse Nepal",
     description: "Classic teahouse on Everest trek route. Mountain panoramas, warm hospitality, and Sherpa culture. Once in a lifetime Himalayan experience.",
-    image: { filename: "mountains-nepal-teahouse-1", url: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=60" },
+    image: { filename: "mountains-nepal-teahouse-1", url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800" },
     price: 450,
     location: "Namche Bazaar",
     country: "Nepal",
     category: "Mountains",
     avgRating: 4.8,
-    numReviews: 67
+    numReviews: 67,
+    geometry: { type: "Point", coordinates: [86.7314, 27.8069] }
   },
   {
     title: "Rocky Mountain Cabin Colorado",
     description: "Authentic log cabin in Rocky Mountain National Park. Wildlife, hiking, and mountain serenity. Colorado's best mountain retreat.",
-    image: { filename: "mountains-colorado-cabin-1", url: "https://images.unsplash.com/photo-1589802829985-817e51171b92?w=800&q=60" },
+    image: { filename: "mountains-colorado-cabin-1", url: "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=800" },
     price: 1850,
     location: "Estes Park",
     country: "United States",
     category: "Mountains",
     avgRating: 4.7,
-    numReviews: 198
+    numReviews: 198,
+    geometry: { type: "Point", coordinates: [-105.5217, 40.3772] }
   },
   {
     title: "Pyrenees Chalet Spain",
     description: "Stone chalet in Spanish Pyrenees. Skiing in winter, hiking in summer, and border views. Hidden gem of European mountains.",
-    image: { filename: "mountains-pyrenees-chalet-1", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=60" },
+    image: { filename: "mountains-pyrenees-chalet-1", url: "https://images.unsplash.com/photo-1439853949212-36589f288f9b?w=800" },
     price: 1450,
     location: "Baqueira-Beret",
     country: "Spain",
     category: "Mountains",
     avgRating: 4.6,
-    numReviews: 78
+    numReviews: 78,
+    geometry: { type: "Point", coordinates: [0.0654, 42.6282] }
   },
   {
     title: "Scottish Highlands Bothy",
     description: "Remote bothy in the Scottish Highlands. Wild scenery, Munro bagging, and total isolation. For serious mountain lovers only.",
-    image: { filename: "mountains-scotland-bothy-1", url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=60" },
+    image: { filename: "mountains-scotland-bothy-1", url: "https://images.unsplash.com/photo-1547483238-f400e65ccd56?w=800" },
     price: 350,
     location: "Glen Affric",
     country: "United Kingdom",
     category: "Mountains",
     avgRating: 4.5,
-    numReviews: 45
+    numReviews: 45,
+    geometry: { type: "Point", coordinates: [-4.8833, 57.2333] }
   },
   {
     title: "Canadian Rockies Log Cabin",
     description: "Classic log cabin in Banff National Park. Bear sightings, hot springs, and Icefields access. Iconic Canadian mountain experience.",
-    image: { filename: "mountains-canada-logcabin-1", url: "https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=800&q=60" },
+    image: { filename: "mountains-canada-logcabin-1", url: "https://images.unsplash.com/photo-1491555103944-7c647fd857e6?w=800" },
     price: 2400,
     location: "Canmore",
     country: "Canada",
     category: "Mountains",
     avgRating: 4.8,
-    numReviews: 167
+    numReviews: 167,
+    geometry: { type: "Point", coordinates: [-115.3529, 51.0892] }
   },
   {
     title: "New Zealand Fiord Lodge",
     description: "Luxury lodge at Milford Sound. Fjords, kayaking, and helicopter flights. Most scenic place on Earth just outside your window.",
-    image: { filename: "mountains-nz-fiord-lodge-1", url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60" },
+    image: { filename: "mountains-nz-fiord-lodge-1", url: "https://images.unsplash.com/photo-1520208422220-d12a3c588e6c?w=800" },
     price: 3800,
     location: "Milford Sound",
     country: "New Zealand",
     category: "Mountains",
     avgRating: 4.9,
-    numReviews: 89
+    numReviews: 89,
+    geometry: { type: "Point", coordinates: [167.8983, -44.6414] }
   },
 
   // ===== BEACHFRONT (12 listings) =====
   {
     title: "Cancun Beach Condo",
     description: "Beachfront condo with Caribbean views. Pool, white sand, and Caribbean blue waters. Ultimate Mexican beach vacation.",
-    image: { filename: "beachfront-cancun-condo-1", url: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=60" },
+    image: { filename: "beachfront-cancun-condo-1", url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800" },
     price: 1800,
     location: "Cancun",
     country: "Mexico",
     category: "Beachfront",
     avgRating: 4.6,
-    numReviews: 234
+    numReviews: 234,
+    geometry: { type: "Point", coordinates: [-86.8515, 21.1619] }
   },
   {
     title: "Maldives Overwater Bungalow",
     description: "Iconic overwater bungalow in the Maldives. Glass floor, private deck, and infinite ocean views. The world's most desired beach accommodation.",
-    image: { filename: "beachfront-maldives-bungalow-1", url: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=60" },
+    image: { filename: "beachfront-maldives-bungalow-1", url: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800" },
     price: 8500,
     location: "North Malé Atoll",
     country: "Maldives",
     category: "Beachfront",
     avgRating: 4.9,
-    numReviews: 78
+    numReviews: 78,
+    geometry: { type: "Point", coordinates: [73.2207, 4.2028] }
   },
   {
     title: "Santorini Cliff Villa",
     description: "Cave villa perched on Santorini caldera. Blue domes, sunset views, and infinity pool. Greece's most photographed destination.",
-    image: { filename: "beachfront-santorini-cliff-1", url: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800&q=60" },
+    image: { filename: "beachfront-santorini-cliff-1", url: "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=800" },
     price: 4500,
     location: "Oia",
     country: "Greece",
     category: "Beachfront",
     avgRating: 4.9,
-    numReviews: 156
+    numReviews: 156,
+    geometry: { type: "Point", coordinates: [25.3750, 36.4618] }
   },
   {
     title: "Bali Seminyak Villa",
     description: "Luxury villa in Seminyak beach district. Private pool, spa treatments, and beach club access. Bali's most sophisticated beach area.",
-    image: { filename: "beachfront-bali-seminyak-1", url: "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=800&q=60" },
+    image: { filename: "beachfront-bali-seminyak-1", url: "https://images.unsplash.com/photo-1530053969600-caed2596d242?w=800" },
     price: 2200,
     location: "Seminyak",
     country: "Indonesia",
     category: "Beachfront",
     avgRating: 4.7,
-    numReviews: 267
+    numReviews: 267,
+    geometry: { type: "Point", coordinates: [115.1628, -8.6910] }
   },
   {
     title: "Maui Oceanfront Cottage",
     description: "Charming cottage on Maui beach. Whales in winter, surf breaks, and Haleakala views. Hawaiian beach living at its finest.",
-    image: { filename: "beachfront-maui-cottage-1", url: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=800&q=60" },
+    image: { filename: "beachfront-maui-cottage-1", url: "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800" },
     price: 2800,
     location: "Maui",
     country: "United States",
     category: "Beachfront",
     avgRating: 4.8,
-    numReviews: 189
+    numReviews: 189,
+    geometry: { type: "Point", coordinates: [-156.3319, 20.7984] }
   },
   {
     title: "Phuket Private Beach",
     description: "Exclusive villa on private Phuket beach. No neighbors, total privacy, and Thai hospitality. The ultimate beach escape.",
-    image: { filename: "beachfront-phuket-villa-1", url: "https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?w=800&q=60" },
+    image: { filename: "beachfront-phuket-villa-1", url: "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=800" },
     price: 3200,
     location: "Phuket",
     country: "Thailand",
     category: "Beachfront",
     avgRating: 4.7,
-    numReviews: 145
+    numReviews: 145,
+    geometry: { type: "Point", coordinates: [98.3923, 7.8804] }
   },
   {
     title: "Barbados Rum Shack",
     description: "Beachfront rum shack in Caribbean paradise. Local vibes, cricket on the beach, and rum punches. Authentic Barbados experience.",
-    image: { filename: "beachfront-barbados-shack-1", url: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=60" },
+    image: { filename: "beachfront-barbados-shack-1", url: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800" },
     price: 1400,
     location: "St. Lawrence Gap",
     country: "Barbados",
     category: "Beachfront",
     avgRating: 4.6,
-    numReviews: 98
+    numReviews: 98,
+    geometry: { type: "Point", coordinates: [-59.5667, 13.0667] }
   },
   {
     title: "Croatia Island Villa",
     description: "Stone villa on Dalmatian island. Crystal clear Adriatic, olive groves, and island hopping. The new Mediterranean hotspot.",
-    image: { filename: "beachfront-croatia-island-1", url: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800&q=60" },
+    image: { filename: "beachfront-croatia-island-1", url: "https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=800" },
     price: 2400,
     location: "Hvar",
     country: "Croatia",
     category: "Beachfront",
     avgRating: 4.8,
-    numReviews: 112
+    numReviews: 112,
+    geometry: { type: "Point", coordinates: [16.4419, 43.1734] }
   },
   {
     title: "Sri Lanka Surf House",
     description: "Surf camp on Sri Lanka's west coast. Consistent waves, local food, and surfing lessons. Asia's best-kept surf secret.",
-    image: { filename: "beachfront-srilanka-surf-1", url: "https://images.unsplash.com/photo-1537519646063-05a1b1297d57?w=800&q=60" },
+    image: { filename: "beachfront-srilanka-surf-1", url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800" },
     price: 850,
     location: "Arugam Bay",
     country: "Sri Lanka",
     category: "Beachfront",
     avgRating: 4.7,
-    numReviews: 178
+    numReviews: 178,
+    geometry: { type: "Point", coordinates: [81.8382, 6.8554] }
   },
   {
     title: "Zanzibar Spice Beach",
     description: "Beachfront spice plantation villa. Turquoise water, spice tours, and dhow sailing. Exotic East African beach retreat.",
-    image: { filename: "beachfront-zanzibar-spice-1", url: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=60" },
+    image: { filename: "beachfront-zanzibar-spice-1", url: "https://images.unsplash.com/photo-1543716091-a840c05249ec?w=800" },
     price: 1900,
     location: "Zanzibar",
     country: "Tanzania",
     category: "Beachfront",
     avgRating: 4.8,
-    numReviews: 87
+    numReviews: 87,
+    geometry: { type: "Point", coordinates: [39.3404, -6.1659] }
   },
   {
     title: "Nosy Be Madagascar",
     description: "Island villa on Madagascar's beach paradise. Lemurs, chameleons, and perfect beaches. Off-the-beaten-path beach luxury.",
-    image: { filename: "beachfront-madagascar-nosybe-1", url: "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=800&q=60" },
+    image: { filename: "beachfront-madagascar-nosybe-1", url: "https://images.unsplash.com/photo-1535262412227-85541e910204?w=800" },
     price: 1650,
     location: "Nosy Be",
     country: "Madagascar",
     category: "Beachfront",
     avgRating: 4.7,
-    numReviews: 56
+    numReviews: 56,
+    geometry: { type: "Point", coordinates: [48.3201, -13.3192] }
   },
   {
     title: "Bora Bora Overwater",
     description: "Famous overwater bungalow in Bora Bora. Mount Otemanu views, lagoon swimming, and honeymoon dreams. The world's most romantic resort.",
-    image: { filename: "beachfront-borabora-overwater-1", url: "https://images.unsplash.com/photo-1589979481223-deb893043163?w=800&q=60" },
+    image: { filename: "beachfront-borabora-overwater-1", url: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=800" },
     price: 9500,
     location: "Bora Bora",
     country: "French Polynesia",
     category: "Beachfront",
     avgRating: 4.9,
-    numReviews: 123
+    numReviews: 123,
+    geometry: { type: "Point", coordinates: [-151.7415, -16.5004] }
   },
 
   // ===== AMAZING POOL (12 listings) =====
   {
     title: "Bali Infinity Pool",
     description: "Villa with famous infinity pool overlooking rice terraces. World's most Instagrammed pool. Tropical luxury at its finest.",
-    image: { filename: "pool-bali-infinity-1", url: "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=60" },
+    image: { filename: "pool-bali-infinity-1", url: "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800" },
     price: 3500,
     location: "Ubud",
     country: "Indonesia",
     category: "Amazing Pool",
     avgRating: 4.9,
-    numReviews: 345
+    numReviews: 345,
+    geometry: { type: "Point", coordinates: [115.2625, -8.5069] }
   },
   {
     title: "Miami Olympic Villa",
     description: "Villa with Olympic-size pool in Miami. Water slide, cabanas, and South Beach views. Ultimate party pool destination.",
-    image: { filename: "pool-miami-olympic-1", url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=60" },
+    image: { filename: "pool-miami-olympic-1", url: "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=800" },
     price: 8500,
     location: "Miami",
     country: "United States",
     category: "Amazing Pool",
     avgRating: 4.7,
-    numReviews: 89
+    numReviews: 89,
+    geometry: { type: "Point", coordinates: [-80.1918, 25.7617] }
   },
   {
     title: "Ibiza Cliffside Pool",
     description: "Pool carved into Ibiza cliffs. Sunset parties, Mediterranean views, and world-famous nightlife. Island of extremes.",
-    image: { filename: "pool-ibiza-cliffside-1", url: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=60" },
+    image: { filename: "pool-ibiza-cliffside-1", url: "https://images.unsplash.com/photo-1561501900-3701fa6a0864?w=800" },
     price: 4800,
     location: "Cala Comte",
     country: "Spain",
     category: "Amazing Pool",
     avgRating: 4.8,
-    numReviews: 156
+    numReviews: 156,
+    geometry: { type: "Point", coordinates: [1.2881, 38.9083] }
   },
   {
     title: "Cape Town Rooftop Pool",
     description: "Rooftop pool with Table Mountain views. City below, mountain above, and African sky. Cape Town's best view.",
-    image: { filename: "pool-capetown-rooftop-1", url: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=60" },
+    image: { filename: "pool-capetown-rooftop-1", url: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800" },
     price: 2200,
     location: "Cape Town",
     country: "South Africa",
     category: "Amazing Pool",
     avgRating: 4.8,
-    numReviews: 234
+    numReviews: 234,
+    geometry: { type: "Point", coordinates: [18.4241, -33.9249] }
   },
   {
     title: "Thailand Jungle Pool",
     description: "Pool hidden in Thai jungle. Waterfalls, nature, and total seclusion. Jungle plunge into paradise.",
-    image: { filename: "pool-thailand-jungle-1", url: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=60" },
+    image: { filename: "pool-thailand-jungle-1", url: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800" },
     price: 1800,
     location: "Khao Sok",
     country: "Thailand",
     category: "Amazing Pool",
     avgRating: 4.9,
-    numReviews: 178
+    numReviews: 178,
+    geometry: { type: "Point", coordinates: [98.5297, 8.9167] }
   },
   {
     title: "Mykonos Infinity Edge",
     description: "Infinity pool with Aegean views in Mykonos. White everything, celebrity spotting, and sunset views. Greek island luxury.",
-    image: { filename: "pool-mykonos-infinity-1", url: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800&q=60" },
+    image: { filename: "pool-mykonos-infinity-1", url: "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?w=800" },
     price: 4200,
     location: "Mykonos",
     country: "Greece",
     category: "Amazing Pool",
     avgRating: 4.8,
-    numReviews: 198
+    numReviews: 198,
+    geometry: { type: "Point", coordinates: [25.3290, 37.4467] }
   },
   {
     title: "Mexico Cenote Villa",
     description: "Villa with natural cenote pool. Swimming in ancient sinkholes, jungles, and Maya ruins. Yucatan's unique water experience.",
-    image: { filename: "pool-mexico-cenote-1", url: "https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=800&q=60" },
+    image: { filename: "pool-mexico-cenote-1", url: "https://images.unsplash.com/photo-1572331165267-854da2b10ccc?w=800" },
     price: 2600,
     location: "Tulum",
     country: "Mexico",
     category: "Amazing Pool",
     avgRating: 4.9,
-    numReviews: 167
+    numReviews: 167,
+    geometry: { type: "Point", coordinates: [-87.4654, 20.2114] }
   },
   {
     title: "Portugal Cliff Pool",
     description: "Pool on dramatic Portuguese cliffs. Atlantic waves, dolphin watching, and surf. Europe's best-kept coast secret.",
-    image: { filename: "pool-portugal-cliff-1", url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=60" },
+    image: { filename: "pool-portugal-cliff-1", url: "https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=800" },
     price: 2100,
     location: "Sagres",
     country: "Portugal",
     category: "Amazing Pool",
     avgRating: 4.7,
-    numReviews: 123
+    numReviews: 123,
+    geometry: { type: "Point", coordinates: [-8.9403, 37.0194] }
   },
   {
     title: "California Desert Pool",
     description: "Pool in Palm Springs desert. Mid-century modern, mountain views, and pool parties. Desert glamour meets Hollywood.",
-    image: { filename: "pool-california-desert-1", url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=60" },
+    image: { filename: "pool-california-desert-1", url: "https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?w=800" },
     price: 2400,
     location: "Palm Springs",
     country: "United States",
     category: "Amazing Pool",
     avgRating: 4.7,
-    numReviews: 145
+    numReviews: 145,
+    geometry: { type: "Point", coordinates: [-116.5453, 33.8303] }
   },
   {
     title: "Vietnam Rice Terrace Pool",
     description: "Pool overlooking Vietnamese rice terraces. Mountain mist, buffalo sightings, and terraced fields. Northern Vietnam magic.",
-    image: { filename: "pool-vietnam-rice-1", url: "https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=60" },
+    image: { filename: "pool-vietnam-rice-1", url: "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?w=800" },
     price: 1200,
     location: "Sapa",
     country: "Vietnam",
     category: "Amazing Pool",
     avgRating: 4.8,
-    numReviews: 98
+    numReviews: 98,
+    geometry: { type: "Point", coordinates: [103.8440, 22.4917] }
   },
   {
     title: "Morocco Riad Pool",
     description: "Traditional riad with courtyard pool in Marrakech. Zellige tiles, rooftop views, and Moroccan hospitality. Medina magic.",
-    image: { filename: "pool-morocco-riad-1", url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=60" },
+    image: { filename: "pool-morocco-riad-1", url: "https://images.unsplash.com/photo-1587213811864-c1a7e7e38c4c?w=800" },
     price: 950,
     location: "Marrakech",
     country: "Morocco",
     category: "Amazing Pool",
     avgRating: 4.7,
-    numReviews: 267
+    numReviews: 267,
+    geometry: { type: "Point", coordinates: [-7.9811, 31.6295] }
   },
   {
     title: "Australia Outback Pool",
     description: "Pool in Australian Outback near Uluru. Red earth, starry skies, and Indigenous culture. Deep outback luxury.",
-    image: { filename: "pool-australia-outback-1", url: "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=800&q=60" },
+    image: { filename: "pool-australia-outback-1", url: "https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=800" },
     price: 3200,
     location: "Uluru",
     country: "Australia",
     category: "Amazing Pool",
     avgRating: 4.9,
-    numReviews: 67
+    numReviews: 67,
+    geometry: { type: "Point", coordinates: [131.0369, -25.3444] }
   },
 
   // ===== KITCHEN (12 listings) =====
   {
     title: "Lyon Chef Kitchen",
     description: "Apartment with professional chef's kitchen in food capital Lyon. Cooking classes, markets, and Michelin dining. French cuisine central.",
-    image: { filename: "kitchen-lyon-chef-1", url: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=60" },
+    image: { filename: "kitchen-lyon-chef-1", url: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800" },
     price: 1800,
     location: "Lyon",
     country: "France",
     category: "Kitchen",
     avgRating: 4.9,
-    numReviews: 134
+    numReviews: 134,
+    geometry: { type: "Point", coordinates: [4.8357, 45.7640] }
   },
   {
     title: "Provence Organic Farm",
     description: "Farmhouse with organic kitchen in Provence. Farm-to-table meals, lavender fields, and truffle hunting. Culinary paradise.",
-    image: { filename: "kitchen-provence-farm-1", url: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=60" },
+    image: { filename: "kitchen-provence-farm-1", url: "https://images.unsplash.com/photo-1565183997392-2f6f122e5912?w=800" },
     price: 2200,
     location: "Gordes",
     country: "France",
     category: "Kitchen",
     avgRating: 4.9,
-    numReviews: 89
+    numReviews: 89,
+    geometry: { type: "Point", coordinates: [5.2699, 43.9129] }
   },
   {
     title: "Sicily Pasta Villa",
     description: "Villa with pasta-making kitchen in Sicily. Nonna's recipes, local ingredients, and sea views. Authentic Italian culinary experience.",
-    image: { filename: "kitchen-sicily-pasta-1", url: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&q=60" },
+    image: { filename: "kitchen-sicily-pasta-1", url: "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800" },
     price: 1950,
     location: "Cefalù",
     country: "Italy",
     category: "Kitchen",
     avgRating: 4.8,
-    numReviews: 156
+    numReviews: 156,
+    geometry: { type: "Point", coordinates: [14.0204, 38.0336] }
   },
   {
     title: "Mexico Taco Hacienda",
     description: "Historic hacienda with authentic Mexican kitchen. Taco lessons, mezcal tasting, and colonial charm. Culinary heritage experience.",
-    image: { filename: "kitchen-mexico-taco-1", url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=60" },
+    image: { filename: "kitchen-mexico-taco-1", url: "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800" },
     price: 1400,
     location: "Oaxaca",
     country: "Mexico",
     category: "Kitchen",
     avgRating: 4.8,
-    numReviews: 198
+    numReviews: 198,
+    geometry: { type: "Point", coordinates: [-96.6699, 17.0732] }
   },
   {
     title: "Smoky Mountains BBQ Cabin",
     description: "Cabin with professional BBQ setup in Tennessee. Smoker, pork shoulder, and Appalachian trails. Southern BBQ pilgrimage.",
-    image: { filename: "kitchen-tennessee-bbq-1", url: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=800&q=60" },
+    image: { filename: "kitchen-tennessee-bbq-1", url: "https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?w=800" },
     price: 1100,
     location: "Gatlinburg",
     country: "United States",
     category: "Kitchen",
     avgRating: 4.7,
-    numReviews: 167
+    numReviews: 167,
+    geometry: { type: "Point", coordinates: [-83.5182, 35.7148] }
   },
   {
     title: "Japanese Sushi Loft",
     description: "Modern loft with sushi-grade kitchen in Tokyo. Knife skills, sake pairing, and Tsukiji access. Ultimate sushi experience.",
-    image: { filename: "kitchen-tokyo-sushi-1", url: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&q=60" },
+    image: { filename: "kitchen-tokyo-sushi-1", url: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800" },
     price: 2400,
     location: "Tokyo",
     country: "Japan",
     category: "Kitchen",
     avgRating: 4.9,
-    numReviews: 234
+    numReviews: 234,
+    geometry: { type: "Point", coordinates: [139.6917, 35.6895] }
   },
   {
     title: "Indian Spice Kitchen Goa",
     description: "Beach house with Indian spice kitchen in Goa. Curry lessons, spice market visits, and beach dining. Indian coastal cuisine.",
-    image: { filename: "kitchen-goa-indian-1", url: "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&q=60" },
+    image: { filename: "kitchen-goa-indian-1", url: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800" },
     price: 850,
     location: "Goa",
     country: "India",
     category: "Kitchen",
     avgRating: 4.7,
-    numReviews: 145
+    numReviews: 145,
+    geometry: { type: "Point", coordinates: [74.1240, 15.2993] }
   },
   {
     title: "Turkish Meze Istanbul",
     description: "Bosphorus apartment with Turkish meze kitchen. mezze spread, Istanbul views, and culinary traditions. Ottoman cuisine central.",
-    image: { filename: "kitchen-istanbul-turkish-1", url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=60" },
+    image: { filename: "kitchen-istanbul-turkish-1", url: "https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=800" },
     price: 1600,
     location: "Istanbul",
     country: "Turkey",
     category: "Kitchen",
     avgRating: 4.8,
-    numReviews: 178
+    numReviews: 178,
+    geometry: { type: "Point", coordinates: [28.9784, 41.0082] }
   },
   {
     title: "Greek Cooking Island",
     description: "Cycladic house with Greek cooking kitchen. Moussaka, fresh seafood, and sunset dinners. Aegean culinary simplicity.",
-    image: { filename: "kitchen-greek-island-1", url: "https://images.unsplash.com/photo-1534422298391-e4f8c172dd57?w=800&q=60" },
+    image: { filename: "kitchen-greek-island-1", url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800" },
     price: 1300,
     location: "Paros",
     country: "Greece",
     category: "Kitchen",
     avgRating: 4.8,
-    numReviews: 123
+    numReviews: 123,
+    geometry: { type: "Point", coordinates: [25.1114, 37.0853] }
   },
   {
     title: "Peruvian Ceviche Lima",
     description: "Miraflores apartment with Peruvian kitchen. Ceviche masterclass, pisco sour, and Pacific views. Latin America's top cuisine.",
-    image: { filename: "kitchen-lima-peruvian-1", url: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=800&q=60" },
+    image: { filename: "kitchen-lima-peruvian-1", url: "https://images.unsplash.com/photo-1583845112203-29329902332e?w=800" },
     price: 1400,
     location: "Lima",
     country: "Peru",
     category: "Kitchen",
     avgRating: 4.9,
-    numReviews: 189
+    numReviews: 189,
+    geometry: { type: "Point", coordinates: [-77.0428, -12.0464] }
   },
   {
     title: "Thai Street Food Bangkok",
     description: "Modern Bangkok apartment with Thai street food kitchen. Pad Thai, market tours, and rooftop dining. Bangkok's best flavors.",
-    image: { filename: "kitchen-bangkok-thai-1", url: "https://images.unsplash.com/photo-1562565652-a0d8f0c59eb4?w=800&q=60" },
+    image: { filename: "kitchen-bangkok-thai-1", url: "https://images.unsplash.com/photo-1571104508999-893933ded431?w=800" },
     price: 950,
     location: "Bangkok",
     country: "Thailand",
     category: "Kitchen",
     avgRating: 4.7,
-    numReviews: 267
+    numReviews: 267,
+    geometry: { type: "Point", coordinates: [100.5018, 13.7563] }
   },
   {
     title: "Italian Pizza Naples",
     description: "Naples apartment with wood-fired pizza oven. Pizza lessons, local ingredients, and Mount Vesuvius views. Pizza birthplace perfection.",
-    image: { filename: "kitchen-naples-pizza-1", url: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=60" },
+    image: { filename: "kitchen-naples-pizza-1", url: "https://images.unsplash.com/photo-1534353473418-4cfa0c791b9b?w=800" },
     price: 1650,
     location: "Naples",
     country: "Italy",
     category: "Kitchen",
     avgRating: 4.9,
-    numReviews: 234
+    numReviews: 234,
+    geometry: { type: "Point", coordinates: [14.2681, 40.8518] }
   },
 
   // ===== DESIGN (12 listings) =====
   {
     title: "Portland Treehouse",
     description: "Architecturally stunning treehouse in Portland. Cantilever design, forest views, and innovative sustainability. Treehouse engineering marvel.",
-    image: { filename: "design-portland-treehouse-1", url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=60" },
+    image: { filename: "design-portland-treehouse-1", url: "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800" },
     price: 2800,
     location: "Portland",
     country: "United States",
     category: "Design",
     avgRating: 4.9,
-    numReviews: 78
+    numReviews: 78,
+    geometry: { type: "Point", coordinates: [-122.6765, 45.5231] }
   },
   {
     title: "Copenhagen Glass Pavilion",
     description: "Contemporary glass house in Copenhagen. Transparency, light, and Nordic minimalism. Architecture as experience.",
-    image: { filename: "design-copenhagen-glass-1", url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=60" },
+    image: { filename: "design-copenhagen-glass-1", url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800" },
     price: 3200,
     location: "Copenhagen",
     country: "Denmark",
     category: "Design",
     avgRating: 4.8,
-    numReviews: 56
+    numReviews: 56,
+    geometry: { type: "Point", coordinates: [12.5683, 55.6761] }
   },
   {
     title: "Joshua Tree Dome",
     description: "Geodesic dome in Joshua Tree desert. Solar-powered, stargazing ceiling, and desert minimalism. Architectural desert retreat.",
-    image: { filename: "design-joshuatree-dome-1", url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60" },
+    image: { filename: "design-joshuatree-dome-1", url: "https://images.unsplash.com/photo-1615529328331-f8917597711f?w=800" },
     price: 2400,
     location: "Joshua Tree",
     country: "United States",
     category: "Design",
     avgRating: 4.8,
-    numReviews: 167
+    numReviews: 167,
+    geometry: { type: "Point", coordinates: [-116.3131, 33.8734] }
   },
   {
     title: "Cape Town Container",
     description: "Converted shipping container in Cape Town. Industrial chic, rooftop deck, and Table Mountain views. Sustainable design success.",
-    image: { filename: "design-capetown-container-1", url: "https://images.unsplash.com/photo-1600210492493-0946913c3316?w=800&q=60" },
+    image: { filename: "design-capetown-container-1", url: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800" },
     price: 1800,
     location: "Cape Town",
     country: "South Africa",
     category: "Design",
     avgRating: 4.7,
-    numReviews: 89
+    numReviews: 89,
+    geometry: { type: "Point", coordinates: [18.4241, -33.9249] }
   },
   {
     title: "Taos Earthship",
     description: "Fully sustainable earthship in New Mexico. Recycled materials, passive solar, and desert independence. Future living now.",
-    image: { filename: "design-taos-earthship-1", url: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=60" },
+    image: { filename: "design-taos-earthship-1", url: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800" },
     price: 1600,
     location: "Taos",
     country: "United States",
     category: "Design",
     avgRating: 4.8,
-    numReviews: 123
+    numReviews: 123,
+    geometry: { type: "Point", coordinates: [-105.5734, 36.4072] }
   },
   {
     title: "Dutch Cube House",
     description: "Rotterdam cube house with upside-down design. Living in architecture, harbor views, and Dutch innovation. True architectural experience.",
-    image: { filename: "design-rotterdam-cube-1", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=60" },
+    image: { filename: "design-rotterdam-cube-1", url: "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=800" },
     price: 2100,
     location: "Rotterdam",
     country: "Netherlands",
     category: "Design",
     avgRating: 4.7,
-    numReviews: 145
+    numReviews: 145,
+    geometry: { type: "Point", coordinates: [4.4777, 51.9244] }
   },
   {
     title: "Barcelona Gaudi Inspired",
     description: "Gaudi-influenced apartment in Barcelona. Organic curves, mosaic details, and Eixample views. Catalan design legacy.",
-    image: { filename: "design-barcelona-gaudi-1", url: "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800&q=60" },
+    image: { filename: "design-barcelona-gaudi-1", url: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=800" },
     price: 2600,
     location: "Barcelona",
     country: "Spain",
     category: "Design",
     avgRating: 4.9,
-    numReviews: 198
+    numReviews: 198,
+    geometry: { type: "Point", coordinates: [2.1734, 41.3851] }
   },
   {
     title: "Frank Lloyd Wright Cabin",
     description: "Cabin inspired by Frank Lloyd Wright in Wisconsin. Organic architecture, forest setting, and design history. American architectural icon.",
-    image: { filename: "design-wisconsin-flw-1", url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=60" },
+    image: { filename: "design-wisconsin-flw-1", url: "https://images.unsplash.com/photo-1567016432779-094069958ea5?w=800" },
     price: 2200,
     location: "Spring Green",
     country: "United States",
     category: "Design",
     avgRating: 4.8,
-    numReviews: 67
+    numReviews: 67,
+    geometry: { type: "Point", coordinates: [-89.8307, 43.1758] }
   },
   {
     title: "Bubble House France",
     description: "Transparent bubble in French Alps. 360-degree mountain views and unique design. Sleep under the Alps.",
-    image: { filename: "design-france-bubble-1", url: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=800&q=60" },
+    image: { filename: "design-france-bubble-1", url: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=800" },
     price: 1900,
     location: "Chamonix",
     country: "France",
     category: "Design",
     avgRating: 4.8,
-    numReviews: 89
+    numReviews: 89,
+    geometry: { type: "Point", coordinates: [6.8696, 45.9237] }
   },
   {
     title: "A Frame Alaska",
     description: "Classic A-frame cabin in Alaskan wilderness. Glass walls, forest setting, and northern lights. Back to nature design.",
-    image: { filename: "design-alaska-aframe-1", url: "https://images.unsplash.com/photo-1478827536114-da961b7f86d2?w=800&q=60" },
+    image: { filename: "design-alaska-aframe-1", url: "https://images.unsplash.com/photo-1603825491103-bd638b1873b4?w=800" },
     price: 1700,
     location: "Talkeetna",
     country: "United States",
     category: "Design",
     avgRating: 4.7,
-    numReviews: 112
+    numReviews: 112,
+    geometry: { type: "Point", coordinates: [-150.1069, 62.3239] }
   },
   {
     title: "Yurt Mongolia Style",
     description: "Modern yurt on Montana ranch. Nomadic design, star roof, and ranch life. Mongolian tradition meets American West.",
-    image: { filename: "design-montana-yurt-1", url: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=60" },
+    image: { filename: "design-montana-yurt-1", url: "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=800" },
     price: 1200,
     location: "Montana",
     country: "United States",
     category: "Design",
     avgRating: 4.7,
-    numReviews: 156
+    numReviews: 156,
+    geometry: { type: "Point", coordinates: [-110.3626, 46.8797] }
   },
   {
     title: "Sauna Finland Modern",
     description: "Architectural sauna house in Finnish lakefront. Glass walls, smoke sauna, and design excellence. Sauna as art.",
-    image: { filename: "design-finland-sauna-1", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=60" },
+    image: { filename: "design-finland-sauna-1", url: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800" },
     price: 2400,
     location: "Kuopio",
     country: "Finland",
     category: "Design",
     avgRating: 4.9,
-    numReviews: 78
+    numReviews: 78,
+    geometry: { type: "Point", coordinates: [27.6782, 62.8924] }
   },
 
   // ===== FAVORITES (12 listings) =====
   {
     title: "Cotswolds Cottage UK",
     description: "Quintessential Cotswolds stone cottage. Honey-stone walls, garden, and pub walks. England's most beloved countryside.",
-    image: { filename: "favorites-cotswolds-1", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=60" },
+    image: { filename: "favorites-cotswolds-1", url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800" },
     price: 1850,
     location: "Bourton-on-the-Water",
     country: "United Kingdom",
     category: "Favorites",
     avgRating: 4.9,
-    numReviews: 234
+    numReviews: 234,
+    geometry: { type: "Point", coordinates: [-1.7602, 51.9241] }
   },
   {
     title: "Lake Como Villa",
     description: "Historic villa on Lake Como. Bellagio views, gardens, and celebrity spotting. Italian lake luxury at its best.",
-    image: { filename: "favorites-lakecomo-1", url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=60" },
+    image: { filename: "favorites-lakecomo-1", url: "https://images.unsplash.com/photo-1467226632440-65f0b4957563?w=800" },
     price: 5500,
     location: "Bellagio",
     country: "Italy",
     category: "Favorites",
     avgRating: 4.9,
-    numReviews: 189
+    numReviews: 189,
+    geometry: { type: "Point", coordinates: [9.1573, 46.0160] }
   },
   {
     title: "Amalfi Cliff House",
     description: "Cliff house on Amalfi Coast. Vertical gardens, sea views, and lemon trees. Italy's most dramatic coastline.",
-    image: { filename: "favorites-amalfi-1", url: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800&q=60" },
+    image: { filename: "favorites-amalfi-1", url: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800" },
     price: 4200,
     location: "Positano",
     country: "Italy",
     category: "Favorites",
     avgRating: 4.8,
-    numReviews: 156
+    numReviews: 156,
+    geometry: { type: "Point", coordinates: [14.4874, 40.6281] }
   },
   {
     title: "Skye Castle Scotland",
     description: "Castle on Isle of Skye. Dramatic landscapes, history, and isolation. Scotland's most magical destination.",
-    image: { filename: "favorites-skye-castle-1", url: "https://images.unsplash.com/photo-1600210491369-e753d80a41f3?w=800&q=60" },
+    image: { filename: "favorites-skye-castle-1", url: "https://images.unsplash.com/photo-1520156190807-c5a0fb09a80f?w=800" },
     price: 3200,
     location: "Isle of Skye",
     country: "United Kingdom",
     category: "Favorites",
     avgRating: 4.9,
-    numReviews: 78
+    numReviews: 78,
+    geometry: { type: "Point", coordinates: [-6.2146, 57.2739] }
   },
   {
     title: "Lake Louise Cabin",
     description: "Cabin at Lake Louise in Banff. Turquoise water, mountain backdrop, and wildlife. Canada's most iconic view.",
-    image: { filename: "favorites-lakelouise-1", url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=60" },
+    image: { filename: "favorites-lakelouise-1", url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800" },
     price: 2800,
     location: "Lake Louise",
     country: "Canada",
     category: "Favorites",
     avgRating: 4.8,
-    numReviews: 267
+    numReviews: 267,
+    geometry: { type: "Point", coordinates: [-116.1770, 51.4254] }
   },
   {
     title: "Hallstatt Lake Austria",
     description: "Fairy-tale house on Hallstatt Lake. UNESCO site, salt mining history, and Alpine views. Europe's most beautiful village.",
-    image: { filename: "favorites-hallstatt-1", url: "https://images.unsplash.com/photo-1600573472591-ee6c563aaec3?w=800&q=60" },
+    image: { filename: "favorites-hallstatt-1", url: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=800" },
     price: 2400,
     location: "Hallstatt",
     country: "Austria",
     category: "Favorites",
     avgRating: 4.9,
-    numReviews: 145
+    numReviews: 145,
+    geometry: { type: "Point", coordinates: [13.6493, 47.5622] }
   },
   {
     title: "Santorini Caldera Suite",
     description: "Caldera suite with best sunset views in Santorini. Blue domes, volcanic cliffs, and romance. Greece's most famous view.",
-    image: { filename: "favorites-santorini-caldera-1", url: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=60" },
+    image: { filename: "favorites-santorini-caldera-1", url: "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800" },
     price: 3800,
     location: "Oia",
     country: "Greece",
     category: "Favorites",
     avgRating: 4.9,
-    numReviews: 312
+    numReviews: 312,
+    geometry: { type: "Point", coordinates: [25.3750, 36.4618] }
   },
   {
     title: "Matera Cave Hotel",
     description: "Hotel carved into Matera caves. Ancient cave dwellings, rock churches, and UNESCO status. Italy's oldest city, most unique stay.",
-    image: { filename: "favorites-matera-1", url: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=60" },
+    image: { filename: "favorites-matera-1", url: "https://images.unsplash.com/photo-1414016642750-7fdd78dc33d9?w=800" },
     price: 1600,
     location: "Matera",
     country: "Italy",
     category: "Favorites",
     avgRating: 4.8,
-    numReviews: 189
+    numReviews: 189,
+    geometry: { type: "Point", coordinates: [16.6045, 40.6694] }
   },
   {
     title: "Faroe Islands Cottage",
     description: "Cottage on Faroe Islands. Dramatic cliffs, grass-roof houses, and isolation. Europe's best-kept secret destination.",
-    image: { filename: "favorites-faroe-1", url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=60" },
+    image: { filename: "favorites-faroe-1", url: "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=800" },
     price: 2100,
     location: "Gásadalur",
     country: "Faroe Islands",
     category: "Favorites",
     avgRating: 4.9,
-    numReviews: 67
+    numReviews: 67,
+    geometry: { type: "Point", coordinates: [-7.5000, 62.1167] }
   },
   {
     title: "Slovenia Lake Bled",
     description: "Castle perched above Lake Bled. Island church, row boats, and Alpine peaks. Slovenia's most iconic sight.",
-    image: { filename: "favorites-bled-1", url: "https://images.unsplash.com/photo-1586375300773-8384e3e4916f?w=800&q=60" },
+    image: { filename: "favorites-bled-1", url: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800" },
     price: 2200,
     location: "Lake Bled",
     country: "Slovenia",
     category: "Favorites",
     avgRating: 4.8,
-    numReviews: 234
+    numReviews: 234,
+    geometry: { type: "Point", coordinates: [14.0939, 46.3625] }
   },
   {
     title: "Iceland Hot Spring Villa",
     description: "Villa with private hot spring in Iceland. Northern lights, lava fields, and Blue Lagoon access. Fire and ice land.",
-    image: { filename: "favorites-iceland-hotspring-1", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=60" },
+    image: { filename: "favorites-iceland-hotspring-1", url: "https://images.unsplash.com/photo-1458668383970-8ddd3927deed?w=800" },
     price: 4500,
     location: "Reykjavik",
     country: "Iceland",
     category: "Favorites",
     avgRating: 4.9,
-    numReviews: 145
+    numReviews: 145,
+    geometry: { type: "Point", coordinates: [-21.8174, 64.1466] }
   },
   {
     title: "Patagonia Glamping",
     description: "Luxury glamping at Torres del Paine. Hiking, glaciers, and wildlife. World's end in comfort.",
-    image: { filename: "favorites-patagonia-glamping-1", url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60" },
+    image: { filename: "favorites-patagonia-glamping-1", url: "https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?w=800" },
     price: 3200,
     location: "Torres del Paine",
     country: "Chile",
     category: "Favorites",
     avgRating: 4.9,
-    numReviews: 98
+    numReviews: 98,
+    geometry: { type: "Point", coordinates: [-72.9666, -51.2538] }
   }
 ];
 
-module.exports = { data };
+module.exports = { data, hostNames };

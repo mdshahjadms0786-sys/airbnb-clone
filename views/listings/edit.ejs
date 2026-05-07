@@ -1,37 +1,135 @@
 <% layout('layouts/boilerplate') %>
+<style>
+.image-upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #fafafa;
+}
+.image-upload-area:hover,
+.image-upload-area.dragover {
+    border-color: #f3424d;
+    background: #fff5f5;
+}
+.image-preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+.preview-thumb {
+    position: relative;
+    width: 90px;
+    height: 90px;
+}
+.preview-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #eee;
+}
+.preview-thumb .remove-img {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+    cursor: pointer;
+    line-height: 22px;
+}
+.amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+.amenity-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+.amenity-checkbox:hover {
+    background: #f0f0f0;
+}
+.amenity-checkbox input {
+    cursor: pointer;
+}
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+</style>
+
     <div class="row mt-1">
         <div class="col-8 offset-2">
                 <br/>
             <h3>Edit Listing</h3>
             <form method="post" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
                <div class="mb-3">
-                    <label for="title" class="form-label">Title:</label>
-                    <input type="text" id="title" name="listing[title]" value="<%= listing.title %>" class="form-control" required>
-                    <div class="valid-feedback">Title looks good!</div>
+                     <label for="title" class="form-label">Title:</label>
+                     <input type="text" id="title" name="listing[title]" value="<%= listing.title %>" class="form-control" required>
+                     <div class="valid-feedback">Title looks good!</div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="description" class="form-label">Description:</label>
-                    <textarea id="description" name="listing[description]" class="form-control" required><%= listing.description %></textarea>
-                    <div class="invalid-feedback">Please provide a valid description.</div>
+                     <label for="description" class="form-label">Description:</label>
+                     <textarea id="description" name="listing[description]" class="form-control" required><%= listing.description %></textarea>
+                     <div class="invalid-feedback">Please provide a valid description.</div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label d-block">Current Listing Image:</label>
-                    <img src="<%= previewImageUrl %>" alt="Current listing image" class="edit-preview-img">
+                    <label class="form-label d-block">Current Listing Images:</label>
+                    <div class="current-images-grid">
+                        <% if(listing.images && listing.images.length > 0) { %>
+                            <% listing.images.forEach((img, index) => { %>
+                                <div class="current-image-item">
+                                    <img src="<%= img.url %>" alt="Listing image <%= index + 1 %>" class="edit-preview-img" style="width:120px;height:90px;">
+                                    <input type="hidden" name="listing[images][<%= index %>][url]" value="<%= img.url %>">
+                                    <input type="hidden" name="listing[images][<%= index %>][filename]" value="<%= img.filename %>">
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800' %>" alt="Current listing image" class="edit-preview-img">
+                        <% } %>
+                    </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="image" class="form-label">Upload New Image:</label>
-                    <input id="image" name="listing[image]" type="file" class="form-control" accept="image/*">
-                    <div class="form-text">New image select karoge to update ke baad wahi save hogi.</div>
+                    <label for="images" class="form-label">Upload New Images (replace all):</label>
+                    <input id="images" name="listing[images]" type="file" class="form-control" multiple accept="image/*">
+                    <div class="form-text">Select new images to replace current ones (max 5 images)</div>
+                    <input type="hidden" name="listing[keepImages]" value="false">
                 </div>
                 
                 <div class="row">
               
                     <div class="mb-3 col-md-4">
                         <label for="price" class="form-label">Price:</label>
-                        <input type="number" id="price" name="listing[price]" value="<%= listing.price %>" class="form-control" required>
+                        <div class="input-group">
+                            <span class="input-group-text">₹</span>
+                            <input type="number" id="price" name="listing[price]" value="<%= listing.price %>" class="form-control" required>
+                        </div>
                         <div class="invalid-feedback">Please provide a valid price.</div>
                     </div>
 
@@ -70,10 +168,88 @@
                     </div>
                 </div>
 
+                <div class="section-title"><i class="fa-solid fa-users"></i> Property Details</div>
+                <div class="row">
+                    <div class="mb-3 col-md-3">
+                        <label for="guests" class="form-label">Guests:</label>
+                        <input type="number" id="guests" name="listing[guests]" value="<%= listing.guests || 4 %>" class="form-control" min="1" required>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="bedrooms" class="form-label">Bedrooms:</label>
+                        <input type="number" id="bedrooms" name="listing[bedrooms]" value="<%= listing.bedrooms || 1 %>" class="form-control" min="1">
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="beds" class="form-label">Beds:</label>
+                        <input type="number" id="beds" name="listing[beds]" value="<%= listing.beds || 1 %>" class="form-control" min="1">
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="bathrooms" class="form-label">Bathrooms:</label>
+                        <input type="number" id="bathrooms" name="listing[bathrooms]" value="<%= listing.bathrooms || 1 %>" class="form-control" min="1">
+                    </div>
+                </div>
+
+                <div class="section-title"><i class="fa-solid fa-house-chimney"></i> Amenities</div>
+                <div class="amenities-grid">
+                    <% amenities.forEach(amenity => { %>
+                    <label class="amenity-checkbox">
+                        <input type="checkbox" name="listing[amenities]" value="<%= amenity %>" <%= (listing.amenities && listing.amenities.includes(amenity)) ? 'checked' : '' %>>
+                        <%= amenity %>
+                    </label>
+                    <% }) %>
+                </div>
+
+                <div class="section-title"><i class="fa-solid fa-clipboard-list"></i> House Rules</div>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Check-in:</label>
+                        <input type="text" name="listing[houseRules][checkIn]" value="<%= listing.houseRules?.checkIn || '3:00 PM' %>" class="form-control">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Checkout:</label>
+                        <input type="text" name="listing[houseRules][checkOut]" value="<%= listing.houseRules?.checkOut || '11:00 AM' %>" class="form-control">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Additional Rules:</label>
+                        <input type="text" name="listing[houseRules][additionalRules]" value="<%= listing.houseRules?.additionalRules || '' %>" placeholder="e.g., No loud music after 10 PM" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" name="listing[houseRules][petsAllowed]" value="true" class="form-check-input" id="petsAllowed" <%= listing.houseRules?.petsAllowed ? 'checked' : '' %>>
+                            <label class="form-check-label" for="petsAllowed">Pets allowed</label>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" name="listing[houseRules][smokingAllowed]" value="true" class="form-check-input" id="smokingAllowed" <%= listing.houseRules?.smokingAllowed ? 'checked' : '' %>>
+                            <label class="form-check-label" for="smokingAllowed">Smoking allowed</label>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" name="listing[houseRules][eventsAllowed]" value="true" class="form-check-input" id="eventsAllowed" <%= listing.houseRules?.eventsAllowed ? 'checked' : '' %>>
+                            <label class="form-check-label" for="eventsAllowed">Events allowed</label>
+                        </div>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-dark edit-btn mt-3">Update Listing</button>
             </form>
         </div>
     </div>
+
+<style>
+.current-images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.current-image-item {
+    position: relative;
+}
+</style>
 
 
     

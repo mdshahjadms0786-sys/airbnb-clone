@@ -21,6 +21,9 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const wishlistRouter = require("./routes/wishlist.js");
+const passwordRouter = require("./routes/password.js");
+const bookingRouter = require("./routes/booking.js");
 
 // DB URL
 const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL || "mongodb://127.0.0.1:27017/wanderlust";
@@ -91,7 +94,15 @@ app.use((req, res, next) => {
     next();
 });
 
+// Root route - redirect to listings
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
+
 // Routes
+app.use("/", passwordRouter);
+app.use("/bookings", bookingRouter);
+app.use("/wishlist", wishlistRouter);
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
