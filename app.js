@@ -24,6 +24,7 @@ const userRouter = require("./routes/user.js");
 const wishlistRouter = require("./routes/wishlist.js");
 const passwordRouter = require("./routes/password.js");
 const bookingRouter = require("./routes/booking.js");
+const { seedListingsIfNeeded } = require("./init/seedListings.js");
 
 // DB URL
 const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL || "mongodb://127.0.0.1:27017/wanderlust";
@@ -37,6 +38,16 @@ const connectDB = async (retries = 5) => {
                 serverSelectionTimeoutMS: 5000,
             });
             dbConnected = true;
+            try {
+                const seedResult = await seedListingsIfNeeded();
+                if (seedResult.seeded) {
+                    console.log(`Seeded ${seedResult.count} sample listings`);
+                } else {
+                    console.log(`Listings already present: ${seedResult.count}`);
+                }
+            } catch (seedErr) {
+                console.log(`Sample listing seed skipped: ${seedErr.message}`);
+            }
             console.log("✅ Connected to MongoDB");
             break;
         } catch (err) {
@@ -139,6 +150,7 @@ app.use((err, req, res, next) => {
 });
 
 // Server Start
-app.listen(8080, () => {
-    console.log("🚀 Server running on http://localhost:8080");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });
