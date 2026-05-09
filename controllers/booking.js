@@ -1,5 +1,5 @@
 const Booking = require('../models/booking');
-const Listing = require('../models/listing');
+const { Listing } = require('../models/listing');
 const ExpressError = require('../utils/ExpressError');
 
 module.exports.createBooking = async (req, res, next) => {
